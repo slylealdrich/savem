@@ -5,24 +5,35 @@ import { message, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { z } from 'zod';
 import type { PageServerLoad } from './$types.js';
-import { format } from 'date-fns';
+import { isValid, parse } from 'date-fns';
 
-const addEntryFormSchema = z.object({
-	description: z.string(),
-	dollars: z.number().min(0.01).multipleOf(0.01),
-	date: z.string().date()
-});
+const addEntryFormSchema = z
+	.object({
+		description: z.string(),
+		dollars: z.number(),
+		cents: z.number().min(1).max(99),
+		month: z.number(),
+		day: z.number(),
+		year: z.number()
+	})
+	.refine((schema) => {
+		const date = parse(schema.year + '-' + schema.month + '-' + schema.day, 'yyyy-M-d', new Date());
+		return isValid(date);
+	}, 'Invalid date');
 
 const deleteEntryFormSchema = z.object({
 	id: z.string()
 });
 
 export const load: PageServerLoad = async () => {
-	const today = format(new Date(), 'yyyy-MM-dd');
+	const today = new Date();
 	const addEntryFormSeed = {
 		description: '',
 		dollars: 0,
-		date: today
+		cents: 0,
+		month: today.getMonth() + 1,
+		day: today.getDate(),
+		year: today.getFullYear()
 	};
 
 	const addEntryForm = await superValidate(addEntryFormSeed, zod(addEntryFormSchema));
@@ -49,8 +60,8 @@ export const actions = {
 		await prisma.entry.create({
 			data: {
 				description: form.data.description,
-				cents: form.data.dollars * 100,
-				date: new Date(form.data.date)
+				cents: (form.data.dollars * 100) + form.data.cents,
+				date: new Date(form.data.year, form.data.month - 1, form.data.day)
 			}
 		});
 		return message(form, 'success');
