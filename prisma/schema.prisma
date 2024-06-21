@@ -11,10 +11,11 @@ datasource db {
 }
 
 model Entry {
-  id     String     @id @default(cuid())
-  amount Decimal
-  date   DateTime
-  tags   EntryTag[]
+  id          String     @id @default(cuid())
+  description String
+  cents       BigInt
+  date        DateTime
+  tags        EntryTag[]
 }
 
 model Tag {
