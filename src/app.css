@@ -3,5 +3,5 @@
 @tailwind utilities;
 
 html {
-	background-color: theme('colors.emerald.950');
+  background-color: theme("colors.emerald.950");
 }
