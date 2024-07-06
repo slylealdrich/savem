@@ -9,6 +9,4 @@
   Budget App
 </h1>
 
-<div class="p-4">
-  <slot />
-</div>
+<slot />

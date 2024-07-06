@@ -93,11 +93,8 @@
   </div>
 
   <div class="w-full h-10 flex justify-around items-center gap-x-2">
-    <button type="button" class="basis-1/2 h-full bg-emerald-800 text-emerald-100 rounded-md">
-      <i class="fa-solid fa-xmark"></i>
-    </button>
-    <button type="submit" class="basis-1/2 h-full bg-emerald-600 text-emerald-100 rounded-md">
-      <i class="fa-solid fa-check"></i>
+    <button type="submit" class="w-full h-full bg-emerald-600 text-emerald-100 rounded-md">
+      <i class="fa-solid fa-plus"></i>
     </button>
   </div>
 </form>
