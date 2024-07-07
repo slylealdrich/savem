@@ -3,13 +3,8 @@ import type { Entry } from "@prisma/client";
 import { fail } from "@sveltejs/kit";
 import { message, superValidate } from "sveltekit-superforms";
 import { zod } from "sveltekit-superforms/adapters";
-import { z } from "zod";
 import type { PageServerLoad } from "./$types.js";
-import { addEntrySchema } from "$lib/schemas.js";
-
-const deleteEntryFormSchema = z.object({
-  id: z.string(),
-});
+import { addEntrySchema, deleteEntryFormSchema } from "$lib/schemas.js";
 
 export const load: PageServerLoad = async () => {
   const today = new Date();

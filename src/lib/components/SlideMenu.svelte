@@ -15,7 +15,7 @@
   <button
     type="button"
     onclick={() => (isOpen = false)}
-    class="w-full h-12 fixed bottom-0 bg-emerald-600"
+    class="w-full h-12 fixed bottom-0 bg-emerald-600 rounded-t-md"
   >
     <i class="fa-solid fa-chevron-down"></i>
   </button>
@@ -23,7 +23,7 @@
   <button
     type="button"
     onclick={() => (isOpen = true)}
-    class="w-full h-12 fixed bottom-0 bg-emerald-600"
+    class="w-full h-12 fixed bottom-0 bg-emerald-600 rounded-t-md"
   >
     <i class="fa-solid fa-chevron-up"></i>
   </button>

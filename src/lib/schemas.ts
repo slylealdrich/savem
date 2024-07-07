@@ -16,3 +16,9 @@ export const addEntrySchema = z
   }, "Invalid date");
 
 export type AddEntrySchema = typeof addEntrySchema;
+
+export const deleteEntryFormSchema = z.object({
+  id: z.string(),
+});
+
+export type DeleteEntryFormSchema = typeof deleteEntryFormSchema;
