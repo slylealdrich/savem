@@ -1,13 +1,13 @@
 import prisma from "$lib/prisma.js";
 import type { Entry } from "@prisma/client";
-import { fail, type Actions } from "@sveltejs/kit";
+import { fail, redirect, type Actions } from "@sveltejs/kit";
 import { message, superValidate } from "sveltekit-superforms";
 import { zod } from "sveltekit-superforms/adapters";
 import type { PageServerLoad } from "./$types.js";
 import { addEntrySchema, deleteEntryFormSchema } from "$lib/schemas.js";
 import { lucia } from "$lib/auth.js";
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async ({ locals }) => {
   const today = new Date();
   const addEntryFormSeed = {
     description: "",
@@ -22,6 +22,9 @@ export const load: PageServerLoad = async () => {
   const deleteEntryForm = await superValidate(zod(deleteEntryFormSchema));
 
   const entries: Entry[] = await prisma.entry.findMany({
+    where: {
+      userId: locals.user?.id,
+    },
     orderBy: {
       date: "desc",
     },
@@ -45,13 +48,18 @@ export const actions: Actions = {
       ...sessionCookie.attributes,
     });
   },
-  addEntry: async ({ request }) => {
+  addEntry: async ({ request, locals }) => {
     const form = await superValidate(request, zod(addEntrySchema));
 
     if (!form.valid) return fail(400, { form });
 
     await prisma.entry.create({
       data: {
+        user: {
+          connect: {
+            id: locals.user?.id,
+          },
+        },
         description: form.data.description,
         cents: form.data.dollars * 100 + form.data.cents,
         date: new Date(form.data.year, form.data.month - 1, form.data.day),

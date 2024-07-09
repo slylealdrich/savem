@@ -13,44 +13,53 @@ datasource db {
 // lucia auth setup
 
 model User {
-  id             String    @id @default(cuid())
-  username       String    @unique
+  id             String     @id @default(cuid())
+  username       String     @unique
   hashedPassword String
-  Session        Session[]
-  Entries        Entry[]
+  session        Session[]
+  entries        Entry[]
+  tags           Tag[]
+  entryTags      EntryTag[]
 }
 
 model Session {
   id        String   @id @default(cuid())
   userId    String
   expiresAt DateTime
-  user      User     @relation(references: [id], fields: [userId])
+
+  user User @relation(fields: [userId], references: [id])
 }
 
 // domain specific models
 
 model Entry {
   id          String     @id @default(cuid())
-  userId      String?
+  userId      String
   description String
   cents       BigInt
   date        DateTime
   tags        EntryTag[]
-  User        User?      @relation(fields: [userId], references: [id])
+
+  user User @relation(fields: [userId], references: [id])
 }
 
 model Tag {
   id      String     @id @default(cuid())
+  userId  String
   color   String     @default("#FFFFFF")
   entryId String
   entries EntryTag[]
+
+  user User @relation(fields: [userId], references: [id])
 }
 
 model EntryTag {
   id      String @id @default(cuid())
+  userId  String
   entryId String
   tagId   String
 
-  Entry Entry @relation(fields: [entryId], references: [id])
-  Tag   Tag   @relation(fields: [tagId], references: [id])
+  user  User  @relation(fields: [userId], references: [id])
+  entry Entry @relation(fields: [entryId], references: [id])
+  tag   Tag   @relation(fields: [tagId], references: [id])
 }

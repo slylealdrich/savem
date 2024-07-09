@@ -1,42 +1,38 @@
-import { fail, superValidate } from "sveltekit-superforms";
+import { fail, setError, superValidate } from "sveltekit-superforms";
 import { zod } from "sveltekit-superforms/adapters";
 import type { PageServerLoad } from "./$types";
-import { signUpSchema } from "$lib/schemas";
+import { signInSchema } from "$lib/schemas";
 import { redirect, type Actions } from "@sveltejs/kit";
 import { Argon2id } from "oslo/password";
 import prisma from "$lib/prisma";
 import { lucia } from "$lib/auth";
+import { log } from "console";
 
 export const load: PageServerLoad = async () => {
-  const signUpForm = await superValidate(zod(signUpSchema));
+  const signInForm = await superValidate(zod(signInSchema));
 
-  return { signUpForm };
+  return { signInForm };
 };
 
 export const actions: Actions = {
-  signUp: async ({ request, cookies }) => {
-    const form = await superValidate(request, zod(signUpSchema));
+  signIn: async ({ request, cookies }) => {
+    const form = await superValidate(request, zod(signInSchema));
 
     if (!form.valid) return fail(400, { form });
     const { username, password } = form.data;
 
-    const argon2id = new Argon2id();
-    const hashedPassword = await argon2id.hash(password);
-
-    const existingUser = await prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: {
         username: username,
       },
     });
 
-    if (existingUser) return fail(400, { form });
+    const argon2id = new Argon2id();
 
-    const user = await prisma.user.create({
-      data: {
-        username: username,
-        hashedPassword: hashedPassword,
-      },
-    });
+    if (!user) return setError(form, "username", "Incorrect username or password");
+
+    const validPassword = await argon2id.verify(user.hashedPassword, password);
+    if (!validPassword) return setError(form, "username", "Incorrect username or password");
 
     const session = await lucia.createSession(user.id, {});
     const sessionCookie = lucia.createSessionCookie(session.id);
