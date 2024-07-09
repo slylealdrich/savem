@@ -10,12 +10,33 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// lucia auth setup
+
+model User {
+  id             String    @id @default(cuid())
+  username       String    @unique
+  hashedPassword String
+  Session        Session[]
+  Entries        Entry[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  expiresAt DateTime
+  user      User     @relation(references: [id], fields: [userId])
+}
+
+// domain specific models
+
 model Entry {
   id          String     @id @default(cuid())
+  userId      String?
   description String
   cents       BigInt
   date        DateTime
   tags        EntryTag[]
+  User        User?      @relation(fields: [userId], references: [id])
 }
 
 model Tag {

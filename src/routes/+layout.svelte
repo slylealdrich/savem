@@ -1,6 +1,7 @@
 <script lang="ts">
   import "../app.css";
   import "@fortawesome/fontawesome-free/css/all.min.css";
+  import { enhance } from "$app/forms";
 </script>
 
 <h1
@@ -8,5 +9,8 @@
 >
   Budget App
 </h1>
+<form method="post" use:enhance action="?/signOut">
+  <button type="submit">Sign Out</button>
+</form>
 
 <slot />

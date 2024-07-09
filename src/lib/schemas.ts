@@ -1,5 +1,8 @@
+import type { sign } from "crypto";
 import { isValid, parse } from "date-fns";
 import { z } from "zod";
+
+// Add Entry Schema
 
 export const addEntrySchema = z
   .object({
@@ -20,8 +23,28 @@ export const addEntrySchema = z
 
 export type AddEntrySchema = typeof addEntrySchema;
 
+// Delete Entry Schema
+
 export const deleteEntryFormSchema = z.object({
   id: z.string(),
 });
 
 export type DeleteEntryFormSchema = typeof deleteEntryFormSchema;
+
+// Sign Up Schema
+
+export const signUpSchema = z.object({
+  username: z.string(),
+  password: z.string(),
+});
+
+export type SignUpSchema = typeof signUpSchema;
+
+// Sign In Schema
+
+export const signInSchema = z.object({
+  username: z.string(),
+  password: z.string(),
+});
+
+export type SignInSchema = typeof signInSchema;
