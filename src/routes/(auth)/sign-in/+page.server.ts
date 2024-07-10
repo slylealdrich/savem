@@ -6,12 +6,11 @@ import { redirect, type Actions } from "@sveltejs/kit";
 import { Argon2id } from "oslo/password";
 import prisma from "$lib/prisma";
 import { lucia } from "$lib/auth";
-import { log } from "console";
 
 export const load: PageServerLoad = async () => {
   const signInForm = await superValidate(zod(signInSchema));
 
-  return { signInForm };
+  return { signInForm: signInForm };
 };
 
 export const actions: Actions = {
