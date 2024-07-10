@@ -4,19 +4,18 @@ import { lucia } from "$lib/auth";
 
 export const handle: Handle = async ({ event, resolve }) => {
   // skip authentication for these routes
-  if (event.url.pathname.startsWith("/sign-in") || event.url.pathname.startsWith("/sign-up")) {
-    return resolve(event);
-  }
+  const inAuth = event.url.pathname.startsWith("/sign-in") || event.url.pathname.startsWith("/sign-up")
 
   // check to see if there is a session cookie
   const sessionId = event.cookies.get(lucia.sessionCookieName);
   if (!sessionId) {
     event.locals.user = null;
     event.locals.session = null;
-    throw redirect(307, "/sign-in");
+    if (inAuth) return resolve(event);
+    else throw redirect(307, "/sign-in");
   }
 
-  const { session, user } = await lucia.validateSession(sessionId);
+  const { user, session } = await lucia.validateSession(sessionId);
 
   // remake the session
   if (session && session.fresh) {
