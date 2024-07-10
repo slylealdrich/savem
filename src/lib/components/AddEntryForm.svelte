@@ -12,7 +12,7 @@
   method="post"
   action="?/addEntry"
   autocomplete="off"
-  class="p-4 flex flex-col justify-start items-center gap-y-4 bg-emerald-900 rounded-md text-emerald-200"
+  class="max-w-[500px] p-4 flex flex-col justify-start items-center gap-y-5 bg-emerald-900 rounded-md text-emerald-200"
 >
   <h1 class="w-full text-2xl text-center font-bold">New Entry</h1>
 

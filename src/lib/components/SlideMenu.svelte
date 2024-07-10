@@ -9,13 +9,16 @@
 </script>
 
 {#if isOpen}
-  <div transition:slide={{ duration: 300, easing: quintOut }} class="fixed bottom-12">
+  <div
+    transition:slide={{ duration: 300, easing: quintOut }}
+    class="fixed w-full lg:w-[50%] bottom-12 flex justify-center"
+  >
     {@render children()}
   </div>
   <button
     type="button"
     onclick={() => (isOpen = false)}
-    class="w-full h-12 fixed bottom-0 bg-emerald-600 rounded-t-md"
+    class="fixed w-full lg:w-[50%] h-12 bottom-0 bg-emerald-600 rounded-t-md"
   >
     <i class="fa-solid fa-chevron-down"></i>
   </button>
@@ -23,7 +26,7 @@
   <button
     type="button"
     onclick={() => (isOpen = true)}
-    class="w-full h-12 fixed bottom-0 bg-emerald-600 rounded-t-md"
+    class="fixed w-full lg:w-[50%] h-12 bottom-0 bg-emerald-600 rounded-t-md"
   >
     <i class="fa-solid fa-chevron-up"></i>
   </button>

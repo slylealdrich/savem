@@ -42,9 +42,11 @@
 <!-- Confirmation -->
 {#if deleteConfirmationModalVisible}
   <Modal offClick={() => (deleteConfirmationModalVisible = false)}>
-    <div class="w-[80dvw] p-10 flex flex-col gap-y-4 bg-emerald-800 text-emerald-200 rounded-md">
-      <span class="text-center">Are you sure you want to delete this?</span>
-      <div class="h-8 flex gap-x-2">
+    <div
+      class="w-[90dvw] max-w-[400px] p-4 flex flex-col gap-y-4 bg-emerald-800 text-emerald-200 rounded-md"
+    >
+      <span class="p-4 text-center text-lg">Delete entry "{data.description}"?</span>
+      <div class="h-10 flex gap-x-2">
         <button
           onclick={() => (deleteConfirmationModalVisible = false)}
           class="basis-1/2 h-full bg-emerald-900 rounded-md">No</button
