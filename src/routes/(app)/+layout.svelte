@@ -3,7 +3,7 @@
 </script>
 
 <div class="w-full h-12 px-2 grid grid-cols-3 justify-between items-center bg-emerald-900">
-  <h1 class="col-start-2 text-center text-xl font-bold text-emerald-200">Budget App</h1>
+  <h1 class="col-start-2 text-center text-xl font-bold text-emerald-200">savem</h1>
   <div class="flex justify-end">
     <form
       method="post"
