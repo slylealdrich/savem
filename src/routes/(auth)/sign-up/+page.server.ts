@@ -1,4 +1,4 @@
-import { fail, setError, superValidate } from "sveltekit-superforms";
+import { setError, superValidate } from "sveltekit-superforms";
 import { zod } from "sveltekit-superforms/adapters";
 import type { PageServerLoad } from "./$types";
 import { signUpSchema } from "$lib/schemas";
@@ -10,7 +10,7 @@ import { lucia } from "$lib/auth";
 export const load: PageServerLoad = async () => {
   const signUpForm = await superValidate(zod(signUpSchema));
 
-  return { signUpForm };
+  return { signUpForm: signUpForm };
 };
 
 export const actions: Actions = {
