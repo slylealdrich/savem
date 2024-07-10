@@ -1,8 +1,9 @@
 <script lang="ts">
   import { superForm } from "sveltekit-superforms";
   import { goto } from "$app/navigation";
+  import type { PageServerData } from "./$types";
 
-  const { data } = $props();
+  const { data }: { data: PageServerData } = $props();
 
   const { form, enhance } = superForm(data.signUpForm);
 </script>

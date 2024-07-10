@@ -4,7 +4,8 @@ import { lucia } from "$lib/auth";
 
 export const handle: Handle = async ({ event, resolve }) => {
   // skip authentication for these routes
-  const inAuth = event.url.pathname.startsWith("/sign-in") || event.url.pathname.startsWith("/sign-up")
+  const inAuth =
+    event.url.pathname.startsWith("/sign-in") || event.url.pathname.startsWith("/sign-up");
 
   // check to see if there is a session cookie
   const sessionId = event.cookies.get(lucia.sessionCookieName);
