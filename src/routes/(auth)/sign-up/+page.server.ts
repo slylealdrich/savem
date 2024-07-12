@@ -1,4 +1,4 @@
-import { setError, superValidate } from "sveltekit-superforms";
+import { fail, setError, superValidate } from "sveltekit-superforms";
 import { zod } from "sveltekit-superforms/adapters";
 import type { PageServerLoad } from "./$types";
 import { signUpSchema } from "$lib/schemas";
@@ -17,7 +17,7 @@ export const actions: Actions = {
   signUp: async ({ request, cookies }) => {
     const form = await superValidate(request, zod(signUpSchema));
 
-    if (!form.valid) return setError(form, "username", "Incorrect username or password");
+    if (!form.valid) return fail(400, { form });
 
     const { username, password } = form.data;
 
@@ -30,7 +30,7 @@ export const actions: Actions = {
       },
     });
 
-    if (existingUser) return setError(form, "username", "Incorrect username or password");
+    if (existingUser) return setError(form, "username", "Username taken");
 
     const user = await prisma.user.create({
       data: {

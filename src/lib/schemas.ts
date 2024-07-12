@@ -33,8 +33,15 @@ export type DeleteEntryFormSchema = typeof deleteEntryFormSchema;
 // Sign Up Schema
 
 export const signUpSchema = z.object({
-  username: z.string(),
-  password: z.string(),
+  username: z
+    .string()
+    .min(1, "Username must be at least 3 characters long")
+    .max(16, "Username must be 16 characters or less")
+    .regex(/^\w+$/, 'Username can only contain letters, numbers, and underscores "_"'),
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .max(128, "Password must be 128 characters or less"),
 });
 
 export type SignUpSchema = typeof signUpSchema;
