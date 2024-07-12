@@ -5,7 +5,7 @@
 
   const { data }: { data: PageServerData } = $props();
 
-  const { form, enhance, errors } = superForm(data.signUpForm);
+  const { form, enhance, errors, submitting } = superForm(data.signUpForm);
 </script>
 
 <div class="w-[100dvw] h-[100dvh] flex justify-center items-center">
@@ -59,8 +59,9 @@
         onclick={() => goto("/sign-in")}
         class="w-full h-10 bg-emerald-800 rounded-md"
       >
-        Sign in to an Existing Account
+        Sign into an Existing Account
       </button>
     </div>
+    {#if $submitting}<span>Signing up...</span>{/if}
   </form>
 </div>
