@@ -7,7 +7,7 @@
   const { data }: { data: PageServerData } = $props();
 </script>
 
-<div class="p-2 grid grid-cols-1 gap-y-2 justify-center">
+<div class="p-2 pb-14 grid grid-cols-1 gap-y-2 justify-center">
   <div
     class="w-full p-2 flex justify-center items-center gap-x-4 bg-emerald-900 text-emerald-200 rounded-md"
   >
