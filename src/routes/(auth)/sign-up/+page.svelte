@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { superForm } from "sveltekit-superforms";
+  import SuperDebug, { superForm } from "sveltekit-superforms";
   import { goto } from "$app/navigation";
   import type { PageServerData } from "./$types";
 
@@ -52,5 +52,6 @@
         Sign In
       </button>
     </div>
+    <SuperDebug data={form} />
   </form>
 </div>

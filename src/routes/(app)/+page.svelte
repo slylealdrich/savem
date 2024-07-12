@@ -2,8 +2,9 @@
   import AddEntryForm from "$lib/components/AddEntryForm.svelte";
   import Entry from "$lib/components/Entry.svelte";
   import SlideMenu from "$lib/components/SlideMenu.svelte";
+  import type { PageServerData } from "./$types";
 
-  const { data } = $props();
+  const { data }: { data: PageServerData } = $props();
 </script>
 
 <div class="p-2 grid grid-cols-1 gap-y-2">
