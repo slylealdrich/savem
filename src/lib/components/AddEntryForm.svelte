@@ -23,8 +23,9 @@
     <input
       name="description"
       type="text"
+      placeholder="Describe the purchase in a few words..."
       bind:value={$form.description}
-      class="h-10 px-1 bg-emerald-950 rounded-b-md"
+      class="h-10 px-2 bg-emerald-950 placeholder-emerald-900 rounded-b-md"
     />
   </label>
 
@@ -35,15 +36,17 @@
       </span>
       <input
         name="dollars"
+        placeholder="0"
         bind:value={$form.dollars}
-        class="w-full p-1 bg-emerald-950 text-center rounded-r-md"
+        class="w-full p-1 bg-emerald-950 text-center placeholder-emerald-900 rounded-r-md"
       />
     </label>
     <label class="flex basis-5/12">
       <input
         name="cents"
+        placeholder="0"
         bind:value={$form.cents}
-        class="w-full p-1 bg-emerald-950 text-center rounded-l-md"
+        class="w-full p-1 bg-emerald-950 text-center placeholder-emerald-900 rounded-l-md"
       />
       <span
         class="w-6 flex justify-center items-center bg-emerald-600 text-sm text-center rounded-r-md"
@@ -57,8 +60,9 @@
     <label class="basis-1/3 flex flex-col">
       <input
         name="month"
+        placeholder="month"
         bind:value={$form.month}
-        class="w-full p-1 bg-emerald-950 text-center rounded-t-md"
+        class="w-full p-1 bg-emerald-950 text-center placeholder-emerald-900 rounded-t-md"
       />
       <span
         class="h-5 flex justify-center items-center bg-emerald-600 text-sm text-center rounded-b-md"
@@ -69,8 +73,9 @@
     <label class="basis-1/3 flex flex-col">
       <input
         name="day"
+        placeholder="day"
         bind:value={$form.day}
-        class="w-full p-1 bg-emerald-950 text-center rounded-t-md"
+        class="w-full p-1 bg-emerald-950 text-center placeholder-emerald-900 rounded-t-md"
       />
       <span
         class="h-5 flex justify-center items-center bg-emerald-600 text-sm text-center rounded-b-md"
@@ -81,8 +86,9 @@
     <label class="basis-1/3 flex flex-col">
       <input
         name="year"
+        placeholder="year"
         bind:value={$form.year}
-        class="w-full p-1 bg-emerald-950 text-center rounded-t-md"
+        class="w-full p-1 bg-emerald-950 text-center placeholder-emerald-900 rounded-t-md"
       />
       <span
         class="h-5 flex justify-center items-center bg-emerald-600 text-sm text-center rounded-b-md"

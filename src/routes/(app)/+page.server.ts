@@ -11,8 +11,6 @@ export const load: PageServerLoad = async ({ locals }) => {
   const today = new Date();
   const addEntryFormSeed = {
     description: "",
-    dollars: 0,
-    cents: 0,
     month: today.getMonth() + 1,
     day: today.getDate(),
     year: today.getFullYear(),
