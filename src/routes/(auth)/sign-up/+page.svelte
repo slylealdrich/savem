@@ -12,7 +12,7 @@
   <form
     method="post"
     use:enhance
-    action="?/signIn"
+    action="?/signUp"
     class="w-[90%] max-w-[500px] p-8 flex flex-col justify-center items-center gap-y-4 bg-emerald-900 text-emerald-200 rounded-md"
   >
     <span class="w-full text-center text-2xl font-bold">Sign Up</span>
