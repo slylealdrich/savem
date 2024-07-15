@@ -8,8 +8,19 @@
   const {
     data,
     deleteForm,
-  }: { data: Entry; deleteForm: SuperValidated<Infer<DeleteEntryFormSchema>> } = $props();
-  const { enhance: deleteEntryEnhance, submit: submitDeleteEntryForm } = superForm(deleteForm);
+    onSuccess,
+  }: {
+    data: Entry;
+    deleteForm: SuperValidated<Infer<DeleteEntryFormSchema>>;
+    onSuccess: () => void;
+  } = $props();
+
+  const { enhance: deleteEntryEnhance, submit: submitDeleteEntryForm } = superForm(deleteForm, {
+    id: data.id,
+    onResult: ({ result }) => {
+      if (result.type === "success") onSuccess();
+    },
+  });
 
   let deleteConfirmationModalVisible = $state(false);
 </script>
