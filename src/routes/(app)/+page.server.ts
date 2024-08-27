@@ -1,10 +1,10 @@
 import prisma from "$lib/prisma.js";
-import type { Entry } from "@prisma/client";
+import type { Entry, Tag } from "@prisma/client";
 import { fail, type Actions } from "@sveltejs/kit";
 import { message, superValidate } from "sveltekit-superforms";
 import { zod } from "sveltekit-superforms/adapters";
 import type { PageServerLoad } from "./$types.js";
-import { addEntrySchema, deleteEntryFormSchema } from "$lib/schemas.js";
+import { addEntrySchema, createTagSchema, deleteEntryFormSchema } from "$lib/schemas.js";
 import { lucia } from "$lib/auth.js";
 
 export const load: PageServerLoad = async ({ locals }) => {
@@ -18,6 +18,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 
   const addEntryForm = await superValidate(addEntryFormSeed, zod(addEntrySchema));
   const deleteEntryForm = await superValidate(zod(deleteEntryFormSchema));
+  const createTagForm = await superValidate(zod(createTagSchema));
 
   const entries: Entry[] = await prisma.entry.findMany({
     where: {
@@ -25,6 +26,15 @@ export const load: PageServerLoad = async ({ locals }) => {
     },
     orderBy: {
       date: "desc",
+    },
+  });
+
+  const tags: Tag[] = await prisma.tag.findMany({
+    where: {
+      userId: locals.user?.id,
+    },
+    orderBy: {
+      name: "desc",
     },
   });
 
@@ -49,6 +59,7 @@ export const load: PageServerLoad = async ({ locals }) => {
   return {
     addEntryForm: addEntryForm,
     deleteEntryForm: deleteEntryForm,
+    createTagForm: createTagForm,
     entries: entries,
     monthTotal: monthTotal,
   };
@@ -68,6 +79,8 @@ export const actions: Actions = {
   addEntry: async ({ request, locals }) => {
     const form = await superValidate(request, zod(addEntrySchema));
 
+    console.log(form.data);
+
     if (!form.valid) return fail(400, { form });
 
     await prisma.entry.create({
@@ -75,6 +88,11 @@ export const actions: Actions = {
         user: {
           connect: {
             id: locals.user?.id,
+          },
+        },
+        tag: {
+          connect: {
+            id: form.data.tag,
           },
         },
         description: form.data.description,
@@ -95,6 +113,22 @@ export const actions: Actions = {
       },
     });
 
+    return message(form, "success");
+  },
+  createTag: async ({ request, locals }) => {
+    const form = await superValidate(request, zod(createTagSchema));
+    console.log(form.data);
+    await prisma.tag.create({
+      data: {
+        user: {
+          connect: {
+            id: locals.user?.id,
+          },
+        },
+        name: form.data.name,
+        color: form.data.color,
+      },
+    });
     return message(form, "success");
   },
 };

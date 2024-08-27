@@ -1,14 +1,27 @@
 <script lang="ts">
-  import type { AddEntrySchema } from "$lib/schemas";
+  import type { AddEntrySchema, CreateTagSchema } from "$lib/schemas";
+  import Modal from "$lib/components/Modal.svelte";
   import { superForm, type Infer, type SuperValidated } from "sveltekit-superforms";
+  import type { Tag } from "@prisma/client";
 
-  const { data }: { data: SuperValidated<Infer<AddEntrySchema>> } = $props();
+  const {
+    addEntryData,
+    createTagData,
+    tags,
+  }: {
+    addEntryData: SuperValidated<Infer<AddEntrySchema>>;
+    createTagData: SuperValidated<Infer<CreateTagSchema>>;
+    tags: Tag[];
+  } = $props();
 
-  const { form, enhance } = superForm(data);
+  const { form: addEntryForm, enhance: addEntryEnhance } = superForm(addEntryData);
+  const { form: createTagForm, enhance: createTagEnhance } = superForm(createTagData);
+
+  let showCreateTagModal = $state(false);
 </script>
 
 <form
-  use:enhance
+  use:addEntryEnhance
   method="post"
   action="?/addEntry"
   autocomplete="off"
@@ -24,7 +37,7 @@
       name="description"
       type="text"
       placeholder="Describe the purchase in a few words..."
-      bind:value={$form.description}
+      bind:value={$addEntryForm.description}
       class="h-10 px-2 bg-emerald-950 placeholder-emerald-900 rounded-b-md"
     />
   </label>
@@ -37,7 +50,7 @@
       <input
         name="dollars"
         placeholder="0"
-        bind:value={$form.dollars}
+        bind:value={$addEntryForm.dollars}
         class="w-full p-1 bg-emerald-950 text-center placeholder-emerald-900 rounded-r-md"
       />
     </label>
@@ -45,7 +58,7 @@
       <input
         name="cents"
         placeholder="0"
-        bind:value={$form.cents}
+        bind:value={$addEntryForm.cents}
         class="w-full p-1 bg-emerald-950 text-center placeholder-emerald-900 rounded-l-md"
       />
       <span
@@ -61,7 +74,7 @@
       <input
         name="month"
         placeholder="month"
-        bind:value={$form.month}
+        bind:value={$addEntryForm.month}
         class="w-full p-1 bg-emerald-950 text-center placeholder-emerald-900 rounded-t-md"
       />
       <span
@@ -74,7 +87,7 @@
       <input
         name="day"
         placeholder="day"
-        bind:value={$form.day}
+        bind:value={$addEntryForm.day}
         class="w-full p-1 bg-emerald-950 text-center placeholder-emerald-900 rounded-t-md"
       />
       <span
@@ -87,7 +100,7 @@
       <input
         name="year"
         placeholder="year"
-        bind:value={$form.year}
+        bind:value={$addEntryForm.year}
         class="w-full p-1 bg-emerald-950 text-center placeholder-emerald-900 rounded-t-md"
       />
       <span
@@ -98,9 +111,33 @@
     </label>
   </div>
 
+  <div>
+    <label>
+      <span>Tag</span>
+      <select name="tag">
+        {#each tags as tag}
+          <option value={tag.id}>{tag.name}</option>
+        {/each}
+      </select>
+    </label>
+    <button onclick={() => (showCreateTagModal = true)}>Create Tag</button>
+  </div>
+
   <div class="w-full h-10 flex justify-around items-center gap-x-2">
     <button type="submit" class="w-full h-full bg-emerald-600 text-emerald-100 rounded-md">
       <i class="fa-solid fa-plus"></i>
     </button>
   </div>
 </form>
+
+{#if showCreateTagModal}
+  <Modal offClick={() => (showCreateTagModal = false)}>
+    <form use:createTagEnhance method="post" action="?/createTag">
+      <label>
+        <span>Name</span>
+        <input name="name" bind:value={$createTagForm.name} />
+      </label>
+      <button type="submit">Submit</button>
+    </form>
+  </Modal>
+{/if}

@@ -6,6 +6,7 @@ import { z } from "zod";
 export const addEntrySchema = z
   .object({
     description: z.string(),
+    tag: z.string(),
     dollars: z.number().min(0).max(999999),
     cents: z.number().min(0).max(99),
     month: z.number(),
@@ -29,6 +30,15 @@ export const deleteEntryFormSchema = z.object({
 });
 
 export type DeleteEntryFormSchema = typeof deleteEntryFormSchema;
+
+// Create Tag Schema
+
+export const createTagSchema = z.object({
+  name: z.string(),
+  color: z.string().optional(),
+});
+
+export type CreateTagSchema = typeof createTagSchema;
 
 // Sign Up Schema
 

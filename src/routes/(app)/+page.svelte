@@ -39,7 +39,7 @@
 
 <SlideMenu>
   <div class="p-4">
-    <AddEntryForm data={data.addEntryForm} />
+    <AddEntryForm addEntryData={data.addEntryForm} createTagData={data.createTagForm} />
   </div>
 </SlideMenu>
 
