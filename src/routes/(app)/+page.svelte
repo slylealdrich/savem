@@ -2,17 +2,9 @@
   import AddEntryForm from "$lib/components/AddEntryForm.svelte";
   import Entry from "$lib/components/Entry.svelte";
   import SlideMenu from "$lib/components/SlideMenu.svelte";
-  import { fly, blur } from "svelte/transition";
   import type { PageServerData } from "./$types";
 
   const { data }: { data: PageServerData } = $props();
-
-  let toasts: string[] = $state([]);
-
-  const addToast = (toast: string) => {
-    toasts.push(toast);
-    setTimeout(() => toasts.shift(), 2000);
-  };
 </script>
 
 <div class="p-2 pb-14 grid grid-cols-1 gap-y-2 justify-center">
@@ -27,30 +19,12 @@
     </span>
   </div>
   {#each data.entries as entry}
-    <Entry
-      data={entry}
-      deleteForm={data.deleteEntryForm}
-      onSuccess={() => {
-        addToast(`Successfully deleted "${entry.description}"`);
-      }}
-    />
+    <Entry data={entry} deleteForm={data.deleteEntryForm} />
   {/each}
 </div>
 
 <SlideMenu>
   <div class="p-4">
-    <AddEntryForm addEntryData={data.addEntryForm} createTagData={data.createTagForm} />
+    <AddEntryForm addEntryData={data.addEntryForm} createTagData={data.createTagForm} tags={[]} />
   </div>
 </SlideMenu>
-
-{#each toasts as toast}
-  <div class="fixed inset-x-0 top-0 p-2">
-    <span
-      in:fly={{ y: -100 }}
-      out:blur
-      class="h-12 flex justify-center items-center bg-emerald-700 text-emerald-200 rounded-md"
-    >
-      {toast}
-    </span>
-  </div>
-{/each}
