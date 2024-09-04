@@ -2,9 +2,21 @@
   import AddEntryForm from "$lib/components/AddEntryForm.svelte";
   import Entry from "$lib/components/Entry.svelte";
   import SlideMenu from "$lib/components/SlideMenu.svelte";
+  import type { Tag } from "@prisma/client";
   import type { PageServerData } from "./$types";
 
   const { data }: { data: PageServerData } = $props();
+
+  let selectedTagName: string = $state("");
+
+  let tagFilter = $derived(data.tags.filter((tag) => tag.name === selectedTagName)[0]);
+
+  let filteredEntries = $derived(
+    data.entries.filter((entry) => {
+      if (!tagFilter) return true;
+      return entry.tagId === tagFilter.id;
+    })
+  );
 </script>
 
 <div class="p-2 pb-14 grid grid-cols-1 gap-y-2 justify-center">
@@ -18,7 +30,18 @@
         : data.monthTotal % 100n}
     </span>
   </div>
-  {#each data.entries as entry}
+  <div
+    class="w-full p-2 flex gap-x-1 justify-center items-center bg-emerald-900 text-emerald-200 rounded-md"
+  >
+    <span>Filter by tag: </span>
+    <select bind:value={selectedTagName} class="p-1 bg-emerald-950 rounded-md">
+      <option></option>
+      {#each data.tags as tag}
+        <option id={tag.id}>{tag.name}</option>
+      {/each}
+    </select>
+  </div>
+  {#each filteredEntries as entry}
     <Entry data={entry} deleteForm={data.deleteEntryForm} />
   {/each}
 </div>

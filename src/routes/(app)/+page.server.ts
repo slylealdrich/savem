@@ -27,6 +27,9 @@ export const load: PageServerLoad = async ({ locals }) => {
     orderBy: {
       date: "desc",
     },
+    include: {
+      tag: true,
+    },
   });
 
   const tags: Tag[] = await prisma.tag.findMany({

@@ -21,7 +21,14 @@
 <!-- Card -->
 <div class="p-2 flex items-center bg-emerald-800 text-center text-emerald-200 rounded-md">
   <div class="basis-11/12 flex items-center divide-x divide-emerald-700">
-    <span class="basis-[30%] w-full text-sm">{format(data.date, "MM-dd-yyyy")}</span>
+    <span class="basis-[30%] w-full flex flex-col justify-center items-center">
+      <span class="text-sm">
+        {format(data.date, "MM-dd-yyyy")}
+      </span>
+      <span class="text-lg">
+        {data.tag.name}
+      </span>
+    </span>
     <div class="basis-[70%] w-full flex flex-col justify-center items-center gap-y-2">
       <span class="text-sm">{data.description}</span>
       <span class="w-3/4 py-1 bg-emerald-900 text-xl rounded-md">
