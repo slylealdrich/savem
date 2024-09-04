@@ -61,8 +61,8 @@ export const load: PageServerLoad = async ({ locals }) => {
     deleteEntryForm: deleteEntryForm,
     createTagForm: createTagForm,
     entries: entries,
-    monthTotal: monthTotal,
     tags: tags,
+    monthTotal: monthTotal,
   };
 };
 

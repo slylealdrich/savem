@@ -34,7 +34,7 @@ export type DeleteEntryFormSchema = typeof deleteEntryFormSchema;
 // Create Tag Schema
 
 export const createTagSchema = z.object({
-  name: z.string(),
+  name: z.string().min(1).max(16),
   color: z.string().optional(),
 });
 
