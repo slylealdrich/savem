@@ -64,8 +64,6 @@ export const actions: Actions = {
   addEntry: async ({ request, locals }) => {
     const form = await superValidate(request, zod(addEntrySchema));
 
-    console.log(form.data);
-
     if (!form.valid) return fail(400, { form });
 
     await prisma.entry.create({
@@ -102,7 +100,6 @@ export const actions: Actions = {
   },
   createTag: async ({ request, locals }) => {
     const form = await superValidate(request, zod(createTagSchema));
-    console.log(form.data);
     await prisma.tag.create({
       data: {
         user: {
