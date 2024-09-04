@@ -46,7 +46,7 @@ model Tag {
   id      String  @id @default(cuid())
   userId  String
   name    String  @unique
-  color   String  @default("#FFFFFF")
+  color   String  @default("#ffffff")
   user    User    @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   entries Entry[]
 }
