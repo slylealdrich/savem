@@ -41,31 +41,12 @@ export const load: PageServerLoad = async ({ locals }) => {
     },
   });
 
-  const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-  const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-
-  const aggregations = await prisma.entry.aggregate({
-    _sum: {
-      cents: true,
-    },
-    where: {
-      userId: locals.user?.id,
-      date: {
-        gte: firstDayOfMonth,
-        lte: lastDayOfMonth,
-      },
-    },
-  });
-
-  const monthTotal = aggregations._sum.cents || BigInt(0);
-
   return {
     addEntryForm: addEntryForm,
     deleteEntryForm: deleteEntryForm,
     createTagForm: createTagForm,
     entries: entries,
     tags: tags,
-    monthTotal: monthTotal,
   };
 };
 

@@ -2,7 +2,6 @@
   import AddEntryForm from "$lib/components/AddEntryForm.svelte";
   import Entry from "$lib/components/Entry.svelte";
   import SlideMenu from "$lib/components/SlideMenu.svelte";
-  import type { Tag } from "@prisma/client";
   import type { PageServerData } from "./$types";
 
   const { data }: { data: PageServerData } = $props();
@@ -17,6 +16,14 @@
       return entry.tagId === tagFilter.id;
     })
   );
+
+  let total = $derived(
+    filteredEntries
+      .flatMap((entry) => {
+        return entry.cents;
+      })
+      .reduce((sum: bigint, n) => sum + n, 0n)
+  );
 </script>
 
 <div class="p-2 pb-14 grid grid-cols-1 gap-y-2 justify-center">
@@ -25,9 +32,7 @@
   >
     <span class="text-lg">Total Spent this Month:</span>
     <span class="p-2 bg-emerald-950 text-xl rounded-md">
-      ${data.monthTotal / 100n}.{data.monthTotal % 100n < 10
-        ? "0" + (data.monthTotal % 100n)
-        : data.monthTotal % 100n}
+      ${total / 100n}.{total % 100n < 10 ? "0" + (total % 100n) : total % 100n}
     </span>
   </div>
   <div
