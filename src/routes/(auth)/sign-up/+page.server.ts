@@ -26,7 +26,7 @@ export const actions: Actions = {
 
     const existingUser = await prisma.user.findUnique({
       where: {
-        username: username,
+        username: username.toLowerCase(),
       },
     });
 
@@ -34,7 +34,7 @@ export const actions: Actions = {
 
     const user = await prisma.user.create({
       data: {
-        username: username,
+        username: username.toLowerCase(),
         hashedPassword: hashedPassword,
       },
     });

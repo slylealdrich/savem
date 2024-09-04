@@ -14,53 +14,39 @@ datasource db {
 // lucia auth setup
 
 model User {
-  id             String     @id @default(cuid())
-  username       String     @unique
+  id             String    @id @default(cuid())
+  username       String    @unique
   hashedPassword String
   session        Session[]
   entries        Entry[]
   tags           Tag[]
-  entryTags      EntryTag[]
 }
 
 model Session {
   id        String   @id @default(cuid())
   userId    String
   expiresAt DateTime
-
-  user User @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
 }
 
 // domain specific models
 
 model Entry {
-  id          String     @id @default(cuid())
+  id          String   @id @default(cuid())
   userId      String
+  tagId       String
   description String
   cents       BigInt
   date        DateTime
-  tags        EntryTag[]
-
-  user User @relation(fields: [userId], references: [id])
+  user        User     @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  tag         Tag      @relation(fields: [tagId], references: [id], onUpdate: Cascade, onDelete: Cascade)
 }
 
 model Tag {
-  id      String     @id @default(cuid())
+  id      String  @id @default(cuid())
   userId  String
-  color   String     @default("#FFFFFF")
-  entryId String
-  entries EntryTag[]
-
-  user User @relation(fields: [userId], references: [id])
-}
-
-model EntryTag {
-  id      String @id @default(cuid())
-  userId  String
-  entryId String
-  tagId   String
-
-  user  User  @relation(fields: [userId], references: [id])
-  entry Entry @relation(fields: [entryId], references: [id])
-  tag   Tag   @relation(fields: [tagId], references: [id])
+  name    String  @unique
+  color   String  @default("#ffffff")
+  user    User    @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  entries Entry[]
 }

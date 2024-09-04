@@ -1,10 +1,10 @@
 import prisma from "$lib/prisma.js";
-import type { Entry } from "@prisma/client";
+import type { Entry, Tag } from "@prisma/client";
 import { fail, type Actions } from "@sveltejs/kit";
 import { message, superValidate } from "sveltekit-superforms";
 import { zod } from "sveltekit-superforms/adapters";
 import type { PageServerLoad } from "./$types.js";
-import { addEntrySchema, deleteEntryFormSchema } from "$lib/schemas.js";
+import { addEntrySchema, createTagSchema, deleteEntryFormSchema } from "$lib/schemas.js";
 import { lucia } from "$lib/auth.js";
 
 export const load: PageServerLoad = async ({ locals }) => {
@@ -18,6 +18,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 
   const addEntryForm = await superValidate(addEntryFormSeed, zod(addEntrySchema));
   const deleteEntryForm = await superValidate(zod(deleteEntryFormSchema));
+  const createTagForm = await superValidate(zod(createTagSchema));
 
   const entries: Entry[] = await prisma.entry.findMany({
     where: {
@@ -26,31 +27,26 @@ export const load: PageServerLoad = async ({ locals }) => {
     orderBy: {
       date: "desc",
     },
+    include: {
+      tag: true,
+    },
   });
 
-  const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-  const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-
-  const aggregations = await prisma.entry.aggregate({
-    _sum: {
-      cents: true,
-    },
+  const tags: Tag[] = await prisma.tag.findMany({
     where: {
       userId: locals.user?.id,
-      date: {
-        gte: firstDayOfMonth,
-        lte: lastDayOfMonth,
-      },
+    },
+    orderBy: {
+      name: "desc",
     },
   });
-
-  const monthTotal = aggregations._sum.cents || BigInt(0);
 
   return {
     addEntryForm: addEntryForm,
     deleteEntryForm: deleteEntryForm,
+    createTagForm: createTagForm,
     entries: entries,
-    monthTotal: monthTotal,
+    tags: tags,
   };
 };
 
@@ -77,6 +73,11 @@ export const actions: Actions = {
             id: locals.user?.id,
           },
         },
+        tag: {
+          connect: {
+            id: form.data.tag,
+          },
+        },
         description: form.data.description,
         cents: form.data.dollars * 100 + form.data.cents,
         date: new Date(form.data.year, form.data.month - 1, form.data.day),
@@ -95,6 +96,21 @@ export const actions: Actions = {
       },
     });
 
+    return message(form, "success");
+  },
+  createTag: async ({ request, locals }) => {
+    const form = await superValidate(request, zod(createTagSchema));
+    await prisma.tag.create({
+      data: {
+        user: {
+          connect: {
+            id: locals.user?.id,
+          },
+        },
+        name: form.data.name,
+        color: form.data.color,
+      },
+    });
     return message(form, "success");
   },
 };

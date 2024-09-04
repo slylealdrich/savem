@@ -8,15 +8,27 @@
   const {
     data,
     deleteForm,
-  }: { data: Entry; deleteForm: SuperValidated<Infer<DeleteEntryFormSchema>> } = $props();
+  }: {
+    data: Entry;
+    deleteForm: SuperValidated<Infer<DeleteEntryFormSchema>>;
+  } = $props();
+
   const { enhance: deleteEntryEnhance, submit: submitDeleteEntryForm } = superForm(deleteForm);
 
   let deleteConfirmationModalVisible = $state(false);
 </script>
 
+<!-- Card -->
 <div class="p-2 flex items-center bg-emerald-800 text-center text-emerald-200 rounded-md">
   <div class="basis-11/12 flex items-center divide-x divide-emerald-700">
-    <span class="basis-[30%] w-full text-sm">{format(data.date, "MM-dd-yyyy")}</span>
+    <span class="basis-[30%] w-full flex flex-col justify-center items-center">
+      <span class="text-sm">
+        {format(data.date, "MM-dd-yyyy")}
+      </span>
+      <span class="text-lg">
+        {data.tag.name}
+      </span>
+    </span>
     <div class="basis-[70%] w-full flex flex-col justify-center items-center gap-y-2">
       <span class="text-sm">{data.description}</span>
       <span class="w-3/4 py-1 bg-emerald-900 text-xl rounded-md">
@@ -26,20 +38,23 @@
       </span>
     </div>
   </div>
-  <form
-    use:deleteEntryEnhance
-    method="post"
-    action="?/deleteEntry"
-    class="basis-1/12 w-full flex justify-center items-center"
-  >
-    <input name="id" type="string" value={data.id} class="hidden" />
-    <button type="button" onclick={() => (deleteConfirmationModalVisible = true)}>
-      <i class="fa-solid fa-xmark text-emerald-700 text-xl"></i>
-    </button>
-  </form>
+  <div class="basis-1/12 flex justify-around items-center">
+    <div class="group relative">
+      <button>
+        <i class="fa-solid fa-ellipsis text-emerald-700 text-xl"></i>
+      </button>
+      <div
+        class="absolute w-32 z-20 right-0 hidden group-focus-within:grid grid-cols-1 bg-emerald-900 divide-y divide-emerald-800 rounded-md"
+      >
+        <!-- TODO: add editing functionality -->
+        <button class="h-12">Edit</button>
+        <button onclick={() => (deleteConfirmationModalVisible = true)} class="h-12">Delete</button>
+      </div>
+    </div>
+  </div>
 </div>
 
-<!-- Confirmation -->
+<!-- Delete Confirmation -->
 {#if deleteConfirmationModalVisible}
   <Modal offClick={() => (deleteConfirmationModalVisible = false)}>
     <div
@@ -62,3 +77,8 @@
     </div>
   </Modal>
 {/if}
+
+<!-- Delete Form -->
+<form use:deleteEntryEnhance method="post" action="?/deleteEntry" class="hidden">
+  <input name="id" type="string" value={data.id} />
+</form>

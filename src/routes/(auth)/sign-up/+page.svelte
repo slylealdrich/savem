@@ -2,13 +2,16 @@
   import { superForm } from "sveltekit-superforms";
   import { goto } from "$app/navigation";
   import type { PageServerData } from "./$types";
+  import Splash from "$lib/components/Splash.svelte";
 
   const { data }: { data: PageServerData } = $props();
 
   const { form, enhance, errors, submitting } = superForm(data.signUpForm);
 </script>
 
-<div class="w-[100dvw] h-[100dvh] flex justify-center items-center">
+<div class="w-[100dvw] h-[100dvh] flex flex-col gap-y-4 justify-center items-center">
+  <Splash />
+
   <form
     method="post"
     use:enhance

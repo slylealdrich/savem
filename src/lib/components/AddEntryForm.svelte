@@ -1,14 +1,27 @@
 <script lang="ts">
-  import type { AddEntrySchema } from "$lib/schemas";
+  import type { AddEntrySchema, CreateTagSchema } from "$lib/schemas";
+  import Modal from "$lib/components/Modal.svelte";
   import { superForm, type Infer, type SuperValidated } from "sveltekit-superforms";
+  import type { Tag } from "@prisma/client";
 
-  const { data }: { data: SuperValidated<Infer<AddEntrySchema>> } = $props();
+  const {
+    addEntryData,
+    createTagData,
+    tags,
+  }: {
+    addEntryData: SuperValidated<Infer<AddEntrySchema>>;
+    createTagData: SuperValidated<Infer<CreateTagSchema>>;
+    tags: Tag[];
+  } = $props();
 
-  const { form, enhance } = superForm(data);
+  const { form: addEntryForm, enhance: addEntryEnhance } = superForm(addEntryData);
+  const { form: createTagForm, enhance: createTagEnhance } = superForm(createTagData);
+
+  let showCreateTagModal = $state(false);
 </script>
 
 <form
-  use:enhance
+  use:addEntryEnhance
   method="post"
   action="?/addEntry"
   autocomplete="off"
@@ -16,19 +29,21 @@
 >
   <h1 class="w-full text-2xl text-center font-bold">New Entry</h1>
 
+  <!-- DESCRIPTION-->
   <label class="w-full flex flex-col">
-    <span class="h-7 flex justify-center items-center bg-emerald-600 text-center rounded-t-md">
+    <span class="p-1 flex justify-center items-center bg-emerald-600 text-center rounded-t-md">
       Description
     </span>
     <input
       name="description"
       type="text"
       placeholder="Describe the purchase in a few words..."
-      bind:value={$form.description}
+      bind:value={$addEntryForm.description}
       class="h-10 px-2 bg-emerald-950 placeholder-emerald-900 rounded-b-md"
     />
   </label>
 
+  <!-- AMOUNT -->
   <div class="w-full flex gap-x-1 justify-center text-2xl">
     <label class="basis-7/12 flex">
       <span class="w-6 flex justify-center items-center bg-emerald-600 text-sm rounded-l-md">
@@ -37,7 +52,7 @@
       <input
         name="dollars"
         placeholder="0"
-        bind:value={$form.dollars}
+        bind:value={$addEntryForm.dollars}
         class="w-full p-1 bg-emerald-950 text-center placeholder-emerald-900 rounded-r-md"
       />
     </label>
@@ -45,7 +60,7 @@
       <input
         name="cents"
         placeholder="0"
-        bind:value={$form.cents}
+        bind:value={$addEntryForm.cents}
         class="w-full p-1 bg-emerald-950 text-center placeholder-emerald-900 rounded-l-md"
       />
       <span
@@ -56,12 +71,13 @@
     </label>
   </div>
 
+  <!-- DATE -->
   <div class="w-full flex gap-x-1">
     <label class="basis-1/3 flex flex-col">
       <input
         name="month"
         placeholder="month"
-        bind:value={$form.month}
+        bind:value={$addEntryForm.month}
         class="w-full p-1 bg-emerald-950 text-center placeholder-emerald-900 rounded-t-md"
       />
       <span
@@ -74,7 +90,7 @@
       <input
         name="day"
         placeholder="day"
-        bind:value={$form.day}
+        bind:value={$addEntryForm.day}
         class="w-full p-1 bg-emerald-950 text-center placeholder-emerald-900 rounded-t-md"
       />
       <span
@@ -87,7 +103,7 @@
       <input
         name="year"
         placeholder="year"
-        bind:value={$form.year}
+        bind:value={$addEntryForm.year}
         class="w-full p-1 bg-emerald-950 text-center placeholder-emerald-900 rounded-t-md"
       />
       <span
@@ -98,9 +114,63 @@
     </label>
   </div>
 
+  <!-- TAG -->
+  <div class="w-full flex gap-x-1">
+    <label class="basis-2/3 flex justify-center items-center">
+      <span class="basis-1/5 h-10 p-1 flex justify-center items-center bg-emerald-600 rounded-l-md">
+        Tag
+      </span>
+      <select name="tag" class="basis-4/5 h-10 px-2 bg-emerald-950 rounded-r-md">
+        {#each tags as tag}
+          <option value={tag.id}>{tag.name}</option>
+        {/each}
+      </select>
+    </label>
+    <button
+      onclick={() => (showCreateTagModal = true)}
+      class="basis-1/3 h-10 bg-emerald-700 rounded-md"
+    >
+      Create Tag
+    </button>
+  </div>
+
   <div class="w-full h-10 flex justify-around items-center gap-x-2">
-    <button type="submit" class="w-full h-full bg-emerald-600 text-emerald-100 rounded-md">
+    <button type="submit" class="w-full h-full bg-emerald-600 rounded-md">
       <i class="fa-solid fa-plus"></i>
     </button>
   </div>
 </form>
+
+{#if showCreateTagModal}
+  <Modal offClick={() => (showCreateTagModal = false)}>
+    <form
+      use:createTagEnhance
+      method="post"
+      action="?/createTag"
+      class="p-6 flex flex-col gap-y-2 bg-emerald-900 text-emerald-200 rounded-md"
+    >
+      <label class="flex flex-col">
+        <span class="p-1 flex justify-center items-center bg-emerald-600 rounded-t-md">
+          Tag Name
+        </span>
+        <input
+          name="name"
+          bind:value={$createTagForm.name}
+          class="h-10 px-2 py-1 bg-emerald-950 rounded-b-md"
+        />
+      </label>
+      <div class="flex gap-x-2">
+        <button
+          type="button"
+          onclick={() => (showCreateTagModal = false)}
+          class="basis-1/2 h-10 bg-emerald-800 rounded-md"
+        >
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+        <button type="submit" class="basis-1/2 h-10 bg-emerald-600 rounded-md">
+          <i class="fa-solid fa-plus"></i>
+        </button>
+      </div>
+    </form>
+  </Modal>
+{/if}

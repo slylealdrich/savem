@@ -22,7 +22,7 @@ export const actions: Actions = {
 
     const user = await prisma.user.findUnique({
       where: {
-        username: username,
+        username: username.toLowerCase(),
       },
     });
 
