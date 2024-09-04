@@ -29,8 +29,9 @@
 >
   <h1 class="w-full text-2xl text-center font-bold">New Entry</h1>
 
+  <!-- DESCRIPTION-->
   <label class="w-full flex flex-col">
-    <span class="h-7 flex justify-center items-center bg-emerald-600 text-center rounded-t-md">
+    <span class="p-1 flex justify-center items-center bg-emerald-600 text-center rounded-t-md">
       Description
     </span>
     <input
@@ -42,6 +43,7 @@
     />
   </label>
 
+  <!-- AMOUNT -->
   <div class="w-full flex gap-x-1 justify-center text-2xl">
     <label class="basis-7/12 flex">
       <span class="w-6 flex justify-center items-center bg-emerald-600 text-sm rounded-l-md">
@@ -69,6 +71,7 @@
     </label>
   </div>
 
+  <!-- DATE -->
   <div class="w-full flex gap-x-1">
     <label class="basis-1/3 flex flex-col">
       <input
@@ -111,20 +114,28 @@
     </label>
   </div>
 
-  <div>
-    <label>
-      <span>Tag</span>
-      <select name="tag">
+  <!-- TAG -->
+  <div class="w-full flex gap-x-1">
+    <label class="basis-2/3 flex justify-center items-center">
+      <span class="basis-1/5 h-10 p-1 flex justify-center items-center bg-emerald-600 rounded-l-md">
+        Tag
+      </span>
+      <select name="tag" class="basis-4/5 h-10 px-2 bg-emerald-950 rounded-r-md">
         {#each tags as tag}
           <option value={tag.id}>{tag.name}</option>
         {/each}
       </select>
     </label>
-    <button onclick={() => (showCreateTagModal = true)}>Create Tag</button>
+    <button
+      onclick={() => (showCreateTagModal = true)}
+      class="basis-1/3 h-10 bg-emerald-700 rounded-md"
+    >
+      Create Tag
+    </button>
   </div>
 
   <div class="w-full h-10 flex justify-around items-center gap-x-2">
-    <button type="submit" class="w-full h-full bg-emerald-600 text-emerald-100 rounded-md">
+    <button type="submit" class="w-full h-full bg-emerald-600 rounded-md">
       <i class="fa-solid fa-plus"></i>
     </button>
   </div>
@@ -132,12 +143,34 @@
 
 {#if showCreateTagModal}
   <Modal offClick={() => (showCreateTagModal = false)}>
-    <form use:createTagEnhance method="post" action="?/createTag">
-      <label>
-        <span>Name</span>
-        <input name="name" bind:value={$createTagForm.name} />
+    <form
+      use:createTagEnhance
+      method="post"
+      action="?/createTag"
+      class="p-6 flex flex-col gap-y-2 bg-emerald-900 text-emerald-200 rounded-md"
+    >
+      <label class="flex flex-col">
+        <span class="p-1 flex justify-center items-center bg-emerald-600 rounded-t-md">
+          Tag Name
+        </span>
+        <input
+          name="name"
+          bind:value={$createTagForm.name}
+          class="h-10 px-2 py-1 bg-emerald-950 rounded-b-md"
+        />
       </label>
-      <button type="submit">Submit</button>
+      <div class="flex gap-x-2">
+        <button
+          type="button"
+          onclick={() => (showCreateTagModal = false)}
+          class="basis-1/2 h-10 bg-emerald-800 rounded-md"
+        >
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+        <button type="submit" class="basis-1/2 h-10 bg-emerald-600 rounded-md">
+          <i class="fa-solid fa-plus"></i>
+        </button>
+      </div>
     </form>
   </Modal>
 {/if}

@@ -25,6 +25,10 @@
 
 <SlideMenu>
   <div class="p-4">
-    <AddEntryForm addEntryData={data.addEntryForm} createTagData={data.createTagForm} tags={[]} />
+    <AddEntryForm
+      addEntryData={data.addEntryForm}
+      createTagData={data.createTagForm}
+      tags={data.tags}
+    />
   </div>
 </SlideMenu>

@@ -62,6 +62,7 @@ export const load: PageServerLoad = async ({ locals }) => {
     createTagForm: createTagForm,
     entries: entries,
     monthTotal: monthTotal,
+    tags: tags,
   };
 };
 
