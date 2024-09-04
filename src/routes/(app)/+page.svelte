@@ -38,8 +38,8 @@
   <div
     class="w-full p-2 flex gap-x-1 justify-center items-center bg-emerald-900 text-emerald-200 rounded-md"
   >
-    <span>Filter by tag: </span>
-    <select bind:value={selectedTagName} class="p-1 bg-emerald-950 rounded-md">
+    <span>Filter by tag:</span>
+    <select bind:value={selectedTagName} class="w-20 p-1 bg-emerald-950 rounded-md">
       <option></option>
       {#each data.tags as tag}
         <option id={tag.id}>{tag.name}</option>
