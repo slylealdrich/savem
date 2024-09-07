@@ -5,10 +5,16 @@ import { z } from "zod";
 
 export const addEntrySchema = z
   .object({
-    description: z.string(),
+    description: z.string().min(1, "Description must be included"),
     tag: z.string(),
-    dollars: z.number().min(0).max(999999),
-    cents: z.number().min(0).max(99),
+    dollars: z
+      .number()
+      .min(0, "Dollar value must be positive or 0")
+      .max(999999, "Dollar value too high"),
+    cents: z
+      .number()
+      .min(0, "Cent value must be positive or 0")
+      .max(99, "Cent value must be less than 100"),
     month: z.number(),
     day: z.number(),
     year: z.number(),
