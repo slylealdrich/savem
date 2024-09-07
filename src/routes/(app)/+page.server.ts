@@ -4,7 +4,7 @@ import { fail, type Actions } from "@sveltejs/kit";
 import { message, superValidate } from "sveltekit-superforms";
 import { zod } from "sveltekit-superforms/adapters";
 import type { PageServerLoad } from "./$types.js";
-import { createEntrySchema, createTagSchema, deleteEntryFormSchema } from "$lib/schemas.js";
+import { createEntrySchema, createTagSchema, deleteEntrySchema } from "$lib/schemas.js";
 import { lucia } from "$lib/auth.js";
 
 export const load: PageServerLoad = async ({ locals }) => {
@@ -17,7 +17,7 @@ export const load: PageServerLoad = async ({ locals }) => {
   };
 
   const createEntryForm = await superValidate(createEntryFormSeed, zod(createEntrySchema));
-  const deleteEntryForm = await superValidate(zod(deleteEntryFormSchema));
+  const deleteEntryForm = await superValidate(zod(deleteEntrySchema));
   const createTagForm = await superValidate(zod(createTagSchema));
 
   const entries: Entry[] = await prisma.entry.findMany({
@@ -86,7 +86,7 @@ export const actions: Actions = {
     return message(form, "success");
   },
   deleteEntry: async ({ request }) => {
-    const form = await superValidate(request, zod(deleteEntryFormSchema));
+    const form = await superValidate(request, zod(deleteEntrySchema));
 
     if (!form.valid) return fail(400, { form });
 

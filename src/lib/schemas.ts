@@ -31,11 +31,11 @@ export type CreateEntrySchema = typeof createEntrySchema;
 
 // Delete Entry Schema
 
-export const deleteEntryFormSchema = z.object({
+export const deleteEntrySchema = z.object({
   id: z.string(),
 });
 
-export type DeleteEntryFormSchema = typeof deleteEntryFormSchema;
+export type DeleteEntrySchema = typeof deleteEntrySchema;
 
 // Create Tag Schema
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { DeleteEntryFormSchema } from "$lib/schemas";
+  import type { DeleteEntrySchema } from "$lib/schemas";
   import { type Entry } from "@prisma/client";
   import { format } from "date-fns";
   import { superForm, type Infer, type SuperValidated } from "sveltekit-superforms";
@@ -10,7 +10,7 @@
     deleteForm,
   }: {
     data: Entry;
-    deleteForm: SuperValidated<Infer<DeleteEntryFormSchema>>;
+    deleteForm: SuperValidated<Infer<DeleteEntrySchema>>;
   } = $props();
 
   const { enhance: deleteEntryEnhance, submit: submitDeleteEntryForm } = superForm(deleteForm);
