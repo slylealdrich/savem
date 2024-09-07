@@ -3,7 +3,7 @@ import { z } from "zod";
 
 // Add Entry Schema
 
-export const addEntrySchema = z
+export const createEntrySchema = z
   .object({
     description: z.string().min(1, "Description must be included"),
     tag: z.string(),
@@ -27,7 +27,7 @@ export const addEntrySchema = z
     return isValid(date);
   }, "Invalid date");
 
-export type AddEntrySchema = typeof addEntrySchema;
+export type CreateEntrySchema = typeof createEntrySchema;
 
 // Delete Entry Schema
 
