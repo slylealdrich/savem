@@ -44,9 +44,9 @@
 
 <div class="p-2 pb-14 grid grid-cols-1 gap-y-2 justify-center">
   <div
-    class="w-full p-2 flex justify-center items-center gap-x-4 bg-emerald-900 text-emerald-200 rounded-md"
+    class="w-full p-2 flex justify-center items-center gap-x-2 bg-emerald-900 text-emerald-200 rounded-md"
   >
-    <div class="flex flex-col lg:flex-row justify-center items-center gap-2">
+    <div class="flex flex-col md:flex-row justify-center items-center gap-2">
       <span class="text-lg">Total spent on</span>
 
       <div class="flex justify-center items-center gap-x-2">

@@ -25,9 +25,12 @@
       <span class="text-sm">
         {format(data.date, "MM-dd-yyyy")}
       </span>
-      <span class="text-lg">
-        {data.tag.name}
-      </span>
+      <div class="flex justify-center items-center gap-x-2">
+        <span class="text-lg">
+          {data.tag.name}
+        </span>
+        <i class="fa-solid fa-tag pt-1" style="color: {data.tag.color}"></i>
+      </div>
     </span>
     <div class="basis-[70%] w-full flex flex-col justify-center items-center gap-y-2">
       <span class="text-sm">{data.description}</span>
