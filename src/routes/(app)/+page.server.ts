@@ -4,20 +4,20 @@ import { fail, type Actions } from "@sveltejs/kit";
 import { message, superValidate } from "sveltekit-superforms";
 import { zod } from "sveltekit-superforms/adapters";
 import type { PageServerLoad } from "./$types.js";
-import { addEntrySchema, createTagSchema, deleteEntryFormSchema } from "$lib/schemas.js";
+import { createEntrySchema, createTagSchema, deleteEntrySchema } from "$lib/schemas.js";
 import { lucia } from "$lib/auth.js";
 
 export const load: PageServerLoad = async ({ locals }) => {
   const today = new Date();
-  const addEntryFormSeed = {
+  const createEntryFormSeed = {
     description: "",
     month: today.getMonth() + 1,
     day: today.getDate(),
     year: today.getFullYear(),
   };
 
-  const addEntryForm = await superValidate(addEntryFormSeed, zod(addEntrySchema));
-  const deleteEntryForm = await superValidate(zod(deleteEntryFormSchema));
+  const createEntryForm = await superValidate(createEntryFormSeed, zod(createEntrySchema));
+  const deleteEntryForm = await superValidate(zod(deleteEntrySchema));
   const createTagForm = await superValidate(zod(createTagSchema));
 
   const entries: Entry[] = await prisma.entry.findMany({
@@ -42,7 +42,7 @@ export const load: PageServerLoad = async ({ locals }) => {
   });
 
   return {
-    addEntryForm: addEntryForm,
+    createEntryForm: createEntryForm,
     deleteEntryForm: deleteEntryForm,
     createTagForm: createTagForm,
     entries: entries,
@@ -61,8 +61,8 @@ export const actions: Actions = {
       ...sessionCookie.attributes,
     });
   },
-  addEntry: async ({ request, locals }) => {
-    const form = await superValidate(request, zod(addEntrySchema));
+  createEntry: async ({ request, locals }) => {
+    const form = await superValidate(request, zod(createEntrySchema));
 
     if (!form.valid) return fail(400, { form });
 
@@ -86,7 +86,7 @@ export const actions: Actions = {
     return message(form, "success");
   },
   deleteEntry: async ({ request }) => {
-    const form = await superValidate(request, zod(deleteEntryFormSchema));
+    const form = await superValidate(request, zod(deleteEntrySchema));
 
     if (!form.valid) return fail(400, { form });
 

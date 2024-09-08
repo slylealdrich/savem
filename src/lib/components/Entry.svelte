@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { DeleteEntryFormSchema } from "$lib/schemas";
+  import type { DeleteEntrySchema } from "$lib/schemas";
   import { type Entry } from "@prisma/client";
   import { format } from "date-fns";
   import { superForm, type Infer, type SuperValidated } from "sveltekit-superforms";
@@ -10,7 +10,7 @@
     deleteForm,
   }: {
     data: Entry;
-    deleteForm: SuperValidated<Infer<DeleteEntryFormSchema>>;
+    deleteForm: SuperValidated<Infer<DeleteEntrySchema>>;
   } = $props();
 
   const { enhance: deleteEntryEnhance, submit: submitDeleteEntryForm } = superForm(deleteForm);
@@ -40,9 +40,10 @@
   </div>
   <div class="basis-1/12 flex justify-around items-center">
     <div class="group relative">
-      <button>
+      <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+      <div tabindex="0">
         <i class="fa-solid fa-ellipsis text-emerald-700 text-xl"></i>
-      </button>
+      </div>
       <div
         class="absolute w-32 z-20 right-0 hidden group-focus-within:grid grid-cols-1 bg-emerald-900 divide-y divide-emerald-800 rounded-md"
       >

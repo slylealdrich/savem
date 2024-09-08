@@ -1,29 +1,29 @@
 <script lang="ts">
-  import type { AddEntrySchema, CreateTagSchema } from "$lib/schemas";
+  import type { CreateEntrySchema, CreateTagSchema } from "$lib/schemas";
   import Modal from "$lib/components/Modal.svelte";
   import { superForm, type Infer, type SuperValidated } from "sveltekit-superforms";
   import type { Tag } from "@prisma/client";
 
   const {
-    addEntryData,
+    createEntryData: createEntryData,
     createTagData,
     tags,
   }: {
-    addEntryData: SuperValidated<Infer<AddEntrySchema>>;
+    createEntryData: SuperValidated<Infer<CreateEntrySchema>>;
     createTagData: SuperValidated<Infer<CreateTagSchema>>;
     tags: Tag[];
   } = $props();
 
-  const { form: addEntryForm, enhance: addEntryEnhance } = superForm(addEntryData);
+  const { form: createEntryForm, enhance: createEntryEnhance } = superForm(createEntryData);
   const { form: createTagForm, enhance: createTagEnhance } = superForm(createTagData);
 
   let showCreateTagModal = $state(false);
 </script>
 
 <form
-  use:addEntryEnhance
+  use:createEntryEnhance
   method="post"
-  action="?/addEntry"
+  action="?/createEntry"
   autocomplete="off"
   class="max-w-[500px] p-4 flex flex-col justify-start items-center gap-y-5 bg-emerald-900 rounded-md text-emerald-200"
 >
@@ -38,7 +38,7 @@
       name="description"
       type="text"
       placeholder="Describe the purchase in a few words..."
-      bind:value={$addEntryForm.description}
+      bind:value={$createEntryForm.description}
       class="h-10 px-2 bg-emerald-950 placeholder-emerald-900 rounded-b-md"
     />
   </label>
@@ -52,7 +52,7 @@
       <input
         name="dollars"
         placeholder="0"
-        bind:value={$addEntryForm.dollars}
+        bind:value={$createEntryForm.dollars}
         class="w-full p-1 bg-emerald-950 text-center placeholder-emerald-900 rounded-r-md"
       />
     </label>
@@ -60,7 +60,7 @@
       <input
         name="cents"
         placeholder="0"
-        bind:value={$addEntryForm.cents}
+        bind:value={$createEntryForm.cents}
         class="w-full p-1 bg-emerald-950 text-center placeholder-emerald-900 rounded-l-md"
       />
       <span
@@ -77,7 +77,7 @@
       <input
         name="month"
         placeholder="month"
-        bind:value={$addEntryForm.month}
+        bind:value={$createEntryForm.month}
         class="w-full p-1 bg-emerald-950 text-center placeholder-emerald-900 rounded-t-md"
       />
       <span
@@ -90,7 +90,7 @@
       <input
         name="day"
         placeholder="day"
-        bind:value={$addEntryForm.day}
+        bind:value={$createEntryForm.day}
         class="w-full p-1 bg-emerald-950 text-center placeholder-emerald-900 rounded-t-md"
       />
       <span
@@ -103,7 +103,7 @@
       <input
         name="year"
         placeholder="year"
-        bind:value={$addEntryForm.year}
+        bind:value={$createEntryForm.year}
         class="w-full p-1 bg-emerald-950 text-center placeholder-emerald-900 rounded-t-md"
       />
       <span

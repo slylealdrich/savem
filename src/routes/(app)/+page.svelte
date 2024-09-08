@@ -1,5 +1,5 @@
 <script lang="ts">
-  import AddEntryForm from "$lib/components/AddEntryForm.svelte";
+  import CreateEntryForm from "$lib/components/CreateEntryForm.svelte";
   import Entry from "$lib/components/Entry.svelte";
   import SlideMenu from "$lib/components/SlideMenu.svelte";
   import type { PageServerData } from "./$types";
@@ -53,8 +53,8 @@
 
 <SlideMenu>
   <div class="p-4">
-    <AddEntryForm
-      addEntryData={data.addEntryForm}
+    <CreateEntryForm
+      createEntryData={data.createEntryForm}
       createTagData={data.createTagForm}
       tags={data.tags}
     />
