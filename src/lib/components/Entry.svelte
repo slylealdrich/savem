@@ -39,9 +39,9 @@
     </div>
   </div>
   <div class="basis-1/12 flex justify-around items-center">
-    <div class="group relative">
-      <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
-      <div tabindex="0">
+    <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+    <div class="group relative" tabindex="0">
+      <div>
         <i class="fa-solid fa-ellipsis text-emerald-700 text-xl"></i>
       </div>
       <div
