@@ -2,20 +2,36 @@
   import CreateEntryForm from "$lib/components/CreateEntryForm.svelte";
   import Entry from "$lib/components/Entry.svelte";
   import SlideMenu from "$lib/components/SlideMenu.svelte";
+  import { format, parse } from "date-fns";
   import type { PageServerData } from "./$types";
 
   const { data }: { data: PageServerData } = $props();
 
+  const today = new Date();
+  const monthFormat = "MMM yyyy";
+
   let selectedTagName: string = $state("");
+  let selectedMonth: string = $state("");
 
   let tagFilter = $derived(data.tags.filter((tag) => tag.name === selectedTagName)[0]);
+  let dateFilter = $derived(parse(selectedMonth, monthFormat, today));
 
   let filteredEntries = $derived(
-    data.entries.filter((entry) => {
-      if (!tagFilter) return true;
-      return entry.tagId === tagFilter.id;
-    })
+    data.entries
+      .filter((entry) => {
+        if (selectedTagName === "") return true;
+        return entry.tagId === tagFilter.id;
+      })
+      .filter((entry) => {
+        if (selectedMonth === "") return true;
+        return (
+          entry.date.getMonth() === dateFilter.getMonth() &&
+          entry.date.getFullYear() === dateFilter.getFullYear()
+        );
+      })
   );
+
+  let months = $derived([...new Set(data.entries.map((entry) => format(entry.date, monthFormat)))]);
 
   let total = $derived(
     filteredEntries
@@ -30,21 +46,27 @@
   <div
     class="w-full p-2 flex justify-center items-center gap-x-4 bg-emerald-900 text-emerald-200 rounded-md"
   >
-    <span class="text-lg">Total Spent this Month:</span>
-    <span class="p-2 bg-emerald-950 text-xl rounded-md">
-      ${total / 100n}.{total % 100n < 10 ? "0" + (total % 100n) : total % 100n}
-    </span>
-  </div>
-  <div
-    class="w-full p-2 flex gap-x-1 justify-center items-center bg-emerald-900 text-emerald-200 rounded-md"
-  >
-    <span>Filter by tag:</span>
-    <select bind:value={selectedTagName} class="w-20 p-1 bg-emerald-950 rounded-md">
-      <option></option>
+    <span class="text-lg">Total spent on</span>
+
+    <select bind:value={selectedTagName} class="min-w-20 p-2 bg-emerald-950 rounded-md">
+      <option value="" selected>everything</option>
       {#each data.tags as tag}
         <option id={tag.id}>{tag.name}</option>
       {/each}
     </select>
+
+    <span>in</span>
+
+    <select bind:value={selectedMonth} class="min-w-20 p-2 bg-emerald-950 rounded-md">
+      <option value="" selected>all months</option>
+      {#each months as month}
+        <option id={month}>{month}</option>
+      {/each}
+    </select>
+
+    <span class="p-2 bg-emerald-950 text-xl rounded-md">
+      ${total / 100n}.{total % 100n < 10 ? "0" + (total % 100n) : total % 100n}
+    </span>
   </div>
   {#each filteredEntries as entry}
     <Entry data={entry} deleteForm={data.deleteEntryForm} />
