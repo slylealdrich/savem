@@ -46,23 +46,27 @@
   <div
     class="w-full p-2 flex justify-center items-center gap-x-4 bg-emerald-900 text-emerald-200 rounded-md"
   >
-    <span class="text-lg">Total spent on</span>
+    <div class="flex flex-col lg:flex-row justify-center items-center gap-2">
+      <span class="text-lg">Total spent on</span>
 
-    <select bind:value={selectedTagName} class="min-w-20 p-2 bg-emerald-950 rounded-md">
-      <option value="" selected>everything</option>
-      {#each data.tags as tag}
-        <option id={tag.id}>{tag.name}</option>
-      {/each}
-    </select>
+      <div class="flex justify-center items-center gap-x-2">
+        <select bind:value={selectedTagName} class="min-w-20 p-2 bg-emerald-950 rounded-md">
+          <option value="" selected>everything</option>
+          {#each data.tags as tag}
+            <option id={tag.id}>{tag.name}</option>
+          {/each}
+        </select>
 
-    <span>in</span>
+        <span>in</span>
 
-    <select bind:value={selectedMonth} class="min-w-20 p-2 bg-emerald-950 rounded-md">
-      <option value="" selected>all months</option>
-      {#each months as month}
-        <option id={month}>{month}</option>
-      {/each}
-    </select>
+        <select bind:value={selectedMonth} class="min-w-20 p-2 bg-emerald-950 rounded-md">
+          <option value="" selected>all months</option>
+          {#each months as month}
+            <option id={month}>{month}</option>
+          {/each}
+        </select>
+      </div>
+    </div>
 
     <span class="p-2 bg-emerald-950 text-xl rounded-md">
       ${total / 100n}.{total % 100n < 10 ? "0" + (total % 100n) : total % 100n}
