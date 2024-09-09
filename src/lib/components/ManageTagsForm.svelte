@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { CreateTagSchema } from "$lib/schemas";
+  import type { CreateTagSchema, UpdateTagSchema } from "$lib/schemas";
   import type { Tag } from "@prisma/client";
   import { id } from "date-fns/locale";
   import { superForm, type Infer, type SuperValidated } from "sveltekit-superforms";
@@ -7,9 +7,11 @@
   const {
     tags,
     createTagData,
+    updateTagData,
   }: {
     tags: Tag[];
     createTagData: SuperValidated<Infer<CreateTagSchema>>;
+    updateTagData: SuperValidated<Infer<UpdateTagSchema>>;
   } = $props();
 
   let selectedTagId: string = $state("");
@@ -17,6 +19,7 @@
   let selectedTag = $derived(tags.filter((tag) => tag.id === selectedTagId)[0]);
 
   const { form: createTagForm, enhance: createTagEnhance } = superForm(createTagData);
+  const { form: updateTagForm, enhance: updateTagEnhance } = superForm(updateTagData);
 </script>
 
 <div
@@ -64,7 +67,12 @@
       </div>
     </form>
   {:else}
-    <form class="w-full flex flex-col gap-y-2">
+    <form
+      use:updateTagEnhance
+      method="post"
+      action="?/updateTag"
+      class="w-full flex flex-col gap-y-2"
+    >
       <input name="id" value={selectedTag.id} class="hidden" />
       <label class="flex flex-col">
         <span class="p-1 flex justify-center items-center bg-emerald-600 rounded-t-md">
@@ -79,6 +87,7 @@
       <label class="flex flex-col">
         <span class="p-1 flex justify-center items-center bg-emerald-600 rounded-t-md">Color</span>
         <input
+          name="color"
           type="color"
           value={selectedTag.color}
           class="w-full h-10 p-1 bg-emerald-950 rounded-b-md"

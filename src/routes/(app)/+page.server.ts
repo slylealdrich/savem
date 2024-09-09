@@ -4,7 +4,12 @@ import { fail, type Actions } from "@sveltejs/kit";
 import { message, superValidate } from "sveltekit-superforms";
 import { zod } from "sveltekit-superforms/adapters";
 import type { PageServerLoad } from "./$types.js";
-import { createEntrySchema, createTagSchema, deleteEntrySchema } from "$lib/schemas.js";
+import {
+  createEntrySchema,
+  createTagSchema,
+  deleteEntrySchema,
+  updateTagSchema,
+} from "$lib/schemas.js";
 import { lucia } from "$lib/auth.js";
 
 export const load: PageServerLoad = async ({ locals }) => {
@@ -19,6 +24,7 @@ export const load: PageServerLoad = async ({ locals }) => {
   const createEntryForm = await superValidate(createEntryFormSeed, zod(createEntrySchema));
   const deleteEntryForm = await superValidate(zod(deleteEntrySchema));
   const createTagForm = await superValidate(zod(createTagSchema));
+  const updateTagForm = await superValidate(zod(updateTagSchema));
 
   const entries: EntryWithTag[] = await prisma.entry.findMany({
     where: {
@@ -45,6 +51,7 @@ export const load: PageServerLoad = async ({ locals }) => {
     createEntryForm: createEntryForm,
     deleteEntryForm: deleteEntryForm,
     createTagForm: createTagForm,
+    updateTagForm: updateTagForm,
     entries: entries,
     tags: tags,
   };
@@ -66,23 +73,39 @@ export const actions: Actions = {
 
     if (!form.valid) return fail(400, { form });
 
-    await prisma.entry.create({
-      data: {
-        user: {
-          connect: {
-            id: locals.user?.id,
+    if (form.data.tag === "") {
+      await prisma.entry.create({
+        data: {
+          user: {
+            connect: {
+              id: locals.user?.id,
+            },
           },
+          description: form.data.description,
+          cents: form.data.dollars * 100 + form.data.cents,
+          date: new Date(form.data.year, form.data.month - 1, form.data.day),
         },
-        tag: {
-          connect: {
-            id: form.data.tag,
+      });
+    } else {
+      await prisma.entry.create({
+        data: {
+          user: {
+            connect: {
+              id: locals.user?.id,
+            },
           },
+          tag: {
+            connect: {
+              id: form.data.tag,
+            },
+          },
+          description: form.data.description,
+          cents: form.data.dollars * 100 + form.data.cents,
+          date: new Date(form.data.year, form.data.month - 1, form.data.day),
         },
-        description: form.data.description,
-        cents: form.data.dollars * 100 + form.data.cents,
-        date: new Date(form.data.year, form.data.month - 1, form.data.day),
-      },
-    });
+      });
+    }
+
     return message(form, "success");
   },
   deleteEntry: async ({ request }) => {
@@ -100,6 +123,9 @@ export const actions: Actions = {
   },
   createTag: async ({ request, locals }) => {
     const form = await superValidate(request, zod(createTagSchema));
+
+    if (!form.valid) return fail(400, { form });
+
     await prisma.tag.create({
       data: {
         user: {
@@ -112,5 +138,20 @@ export const actions: Actions = {
       },
     });
     return message(form, "success");
+  },
+  updateTag: async ({ request }) => {
+    const form = await superValidate(request, zod(updateTagSchema));
+
+    if (!form.valid) return fail(400, { form });
+
+    await prisma.tag.update({
+      where: {
+        id: form.data.id,
+      },
+      data: {
+        name: form.data.name,
+        color: form.data.color,
+      },
+    });
   },
 };

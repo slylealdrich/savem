@@ -82,6 +82,7 @@
     <CreateEntryForm
       createEntryData={data.createEntryForm}
       createTagData={data.createTagForm}
+      updateTagData={data.updateTagForm}
       tags={data.tags}
     />
   </div>

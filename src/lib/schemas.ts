@@ -41,10 +41,20 @@ export type DeleteEntrySchema = typeof deleteEntrySchema;
 
 export const createTagSchema = z.object({
   name: z.string().min(1).max(16),
-  color: z.string().optional(),
+  color: z.string(),
 });
 
 export type CreateTagSchema = typeof createTagSchema;
+
+// Update Tag Schema
+
+export const updateTagSchema = z.object({
+  id: z.string(),
+  name: z.string().min(1).max(16),
+  color: z.string(),
+});
+
+export type UpdateTagSchema = typeof updateTagSchema;
 
 // Sign Up Schema
 
