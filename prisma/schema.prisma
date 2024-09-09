@@ -14,12 +14,13 @@ datasource db {
 // lucia auth setup
 
 model User {
-  id             String    @id @default(cuid())
-  username       String    @unique
+  id             String @id @default(cuid())
+  username       String @unique
   hashedPassword String
-  session        Session[]
-  entries        Entry[]
-  tags           Tag[]
+
+  session Session[]
+  entries Entry[]
+  tags    Tag[]
 }
 
 model Session {
@@ -41,7 +42,7 @@ model Entry {
   userId String
   user   User    @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   tagId  String?
-  tag    Tag?    @relation(fields: [tagId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  tag    Tag?    @relation(fields: [tagId], references: [id], onUpdate: SetNull, onDelete: SetNull)
 }
 
 model Tag {
