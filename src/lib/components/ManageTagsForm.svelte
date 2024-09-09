@@ -20,7 +20,7 @@
 </script>
 
 <div
-  class="p-5 flex flex-col justify-center items-center gap-y-5 bg-emerald-900 text-emerald-200 rounded-md"
+  class="w-80 max-w- p-5 flex flex-col justify-center items-center gap-y-5 bg-emerald-900 text-emerald-200 rounded-md"
 >
   <h1 class="text-xl font-bold">Manage Tags</h1>
 
@@ -32,7 +32,12 @@
   </select>
 
   {#if selectedTagId === ""}
-    <form use:createTagEnhance method="post" action="?/createTag" class="flex flex-col gap-y-2">
+    <form
+      use:createTagEnhance
+      method="post"
+      action="?/createTag"
+      class="w-full flex flex-col gap-y-2"
+    >
       <label class="flex flex-col">
         <span class="p-1 flex justify-center items-center bg-emerald-600 rounded-t-md">
           Tag Name
@@ -59,7 +64,7 @@
       </div>
     </form>
   {:else}
-    <form class="flex flex-col gap-y-2">
+    <form class="w-full flex flex-col gap-y-2">
       <input name="id" value={selectedTag.id} class="hidden" />
       <label class="flex flex-col">
         <span class="p-1 flex justify-center items-center bg-emerald-600 rounded-t-md">
