@@ -37,7 +37,7 @@ export const load: PageServerLoad = async ({ locals }) => {
       userId: locals.user?.id,
     },
     orderBy: {
-      name: "desc",
+      name: "asc",
     },
   });
 
