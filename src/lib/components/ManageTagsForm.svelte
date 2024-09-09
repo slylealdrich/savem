@@ -1,0 +1,87 @@
+<script lang="ts">
+  import type { CreateTagSchema } from "$lib/schemas";
+  import type { Tag } from "@prisma/client";
+  import { id } from "date-fns/locale";
+  import { superForm, type Infer, type SuperValidated } from "sveltekit-superforms";
+
+  const {
+    tags,
+    createTagData,
+  }: {
+    tags: Tag[];
+    createTagData: SuperValidated<Infer<CreateTagSchema>>;
+  } = $props();
+
+  let selectedTagId: string = $state("");
+
+  let selectedTag = $derived(tags.filter((tag) => tag.id === selectedTagId)[0]);
+
+  const { form: createTagForm, enhance: createTagEnhance } = superForm(createTagData);
+</script>
+
+<div
+  class="p-5 flex flex-col justify-center items-center gap-y-5 bg-emerald-900 text-emerald-200 rounded-md"
+>
+  <h1 class="text-xl font-bold">Manage Tags</h1>
+
+  <select bind:value={selectedTagId} class="w-full p-2 bg-emerald-950 rounded-md">
+    <option value="" selected>create new tag</option>
+    {#each tags as tag}
+      <option value={tag.id}>{tag.name}</option>
+    {/each}
+  </select>
+
+  {#if selectedTagId === ""}
+    <form use:createTagEnhance method="post" action="?/createTag" class="flex flex-col gap-y-2">
+      <label class="flex flex-col">
+        <span class="p-1 flex justify-center items-center bg-emerald-600 rounded-t-md">
+          Tag Name
+        </span>
+        <input
+          name="name"
+          bind:value={$createTagForm.name}
+          class="h-10 px-2 py-1 bg-emerald-950 rounded-b-md"
+        />
+      </label>
+      <label class="flex flex-col">
+        <span class="p-1 flex justify-center items-center bg-emerald-600 rounded-t-md">Color</span>
+        <input
+          name="color"
+          type="color"
+          bind:value={$createTagForm.color}
+          class="w-full h-10 p-1 bg-emerald-950 rounded-b-md"
+        />
+      </label>
+      <div class="flex gap-x-2">
+        <button type="submit" class="w-full h-10 bg-emerald-600 rounded-md">
+          <i class="fa-solid fa-plus"></i>
+        </button>
+      </div>
+    </form>
+  {:else}
+    <form class="flex flex-col gap-y-2">
+      <input name="id" value={selectedTag.id} class="hidden" />
+      <label class="flex flex-col">
+        <span class="p-1 flex justify-center items-center bg-emerald-600 rounded-t-md">
+          Tag Name
+        </span>
+        <input
+          name="name"
+          value={selectedTag.name}
+          class="h-10 px-2 py-1 bg-emerald-950 rounded-b-md"
+        />
+      </label>
+      <label class="flex flex-col">
+        <span class="p-1 flex justify-center items-center bg-emerald-600 rounded-t-md">Color</span>
+        <input
+          type="color"
+          value={selectedTag.color}
+          class="w-full h-10 p-1 bg-emerald-950 rounded-b-md"
+        />
+      </label>
+      <div class="flex gap-x-2">
+        <button type="submit" class="w-full h-10 bg-emerald-600 rounded-md"> Save Edit </button>
+      </div>
+    </form>
+  {/if}
+</div>

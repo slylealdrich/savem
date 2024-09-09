@@ -26,9 +26,9 @@
       <span class="text-sm">
         {format(data.date, "MM-dd-yyyy")}
       </span>
-      <div class="flex justify-center items-center gap-x-2">
+      <div class="flex justify-center items-center gap-x-2 text-sm">
         {#if data.tag}
-          <span class="text-lg">
+          <span>
             {data.tag.name}
           </span>
           <i class="fa-solid fa-tag pt-1" style="color: {data.tag.color}"></i>

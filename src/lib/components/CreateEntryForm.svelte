@@ -3,6 +3,7 @@
   import Modal from "$lib/components/Modal.svelte";
   import { superForm, type Infer, type SuperValidated } from "sveltekit-superforms";
   import type { Tag } from "@prisma/client";
+  import ManageTagsForm from "./ManageTagsForm.svelte";
 
   const {
     createEntryData: createEntryData,
@@ -116,11 +117,12 @@
 
   <!-- TAG -->
   <div class="w-full flex gap-x-1">
-    <label class="basis-2/3 flex justify-center items-center">
+    <label class="basis-[65%] flex justify-center items-center">
       <span class="basis-1/5 h-10 p-1 flex justify-center items-center bg-emerald-600 rounded-l-md">
         Tag
       </span>
       <select name="tag" class="basis-4/5 h-10 px-2 bg-emerald-950 rounded-r-md">
+        <option value="" selected></option>
         {#each tags as tag}
           <option value={tag.id}>{tag.name}</option>
         {/each}
@@ -128,9 +130,9 @@
     </label>
     <button
       onclick={() => (showCreateTagModal = true)}
-      class="basis-1/3 h-10 bg-emerald-700 rounded-md"
+      class="basis-[35%] h-10 bg-emerald-700 rounded-md"
     >
-      Create Tag
+      Manage Tags
     </button>
   </div>
 
@@ -143,34 +145,6 @@
 
 {#if showCreateTagModal}
   <Modal offClick={() => (showCreateTagModal = false)}>
-    <form
-      use:createTagEnhance
-      method="post"
-      action="?/createTag"
-      class="p-6 flex flex-col gap-y-2 bg-emerald-900 text-emerald-200 rounded-md"
-    >
-      <label class="flex flex-col">
-        <span class="p-1 flex justify-center items-center bg-emerald-600 rounded-t-md">
-          Tag Name
-        </span>
-        <input
-          name="name"
-          bind:value={$createTagForm.name}
-          class="h-10 px-2 py-1 bg-emerald-950 rounded-b-md"
-        />
-      </label>
-      <div class="flex gap-x-2">
-        <button
-          type="button"
-          onclick={() => (showCreateTagModal = false)}
-          class="basis-1/2 h-10 bg-emerald-800 rounded-md"
-        >
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-        <button type="submit" class="basis-1/2 h-10 bg-emerald-600 rounded-md">
-          <i class="fa-solid fa-plus"></i>
-        </button>
-      </div>
-    </form>
+    <ManageTagsForm {tags} {createTagData} />
   </Modal>
 {/if}
