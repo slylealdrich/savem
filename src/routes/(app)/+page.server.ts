@@ -1,5 +1,5 @@
-import prisma from "$lib/prisma.js";
-import type { Entry, Tag } from "@prisma/client";
+import prisma, { type EntryWithTag } from "$lib/prisma.js";
+import type { Tag } from "@prisma/client";
 import { fail, type Actions } from "@sveltejs/kit";
 import { message, superValidate } from "sveltekit-superforms";
 import { zod } from "sveltekit-superforms/adapters";
@@ -20,7 +20,7 @@ export const load: PageServerLoad = async ({ locals }) => {
   const deleteEntryForm = await superValidate(zod(deleteEntrySchema));
   const createTagForm = await superValidate(zod(createTagSchema));
 
-  const entries: Entry[] = await prisma.entry.findMany({
+  const entries: EntryWithTag[] = await prisma.entry.findMany({
     where: {
       userId: locals.user?.id,
     },

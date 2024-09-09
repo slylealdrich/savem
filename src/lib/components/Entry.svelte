@@ -4,12 +4,13 @@
   import { format } from "date-fns";
   import { superForm, type Infer, type SuperValidated } from "sveltekit-superforms";
   import Modal from "./Modal.svelte";
+  import type { EntryWithTag } from "$lib/prisma";
 
   const {
     data,
     deleteForm,
   }: {
-    data: Entry;
+    data: EntryWithTag;
     deleteForm: SuperValidated<Infer<DeleteEntrySchema>>;
   } = $props();
 
@@ -26,10 +27,14 @@
         {format(data.date, "MM-dd-yyyy")}
       </span>
       <div class="flex justify-center items-center gap-x-2">
-        <span class="text-lg">
-          {data.tag.name}
-        </span>
-        <i class="fa-solid fa-tag pt-1" style="color: {data.tag.color}"></i>
+        {#if data.tag}
+          <span class="text-lg">
+            {data.tag.name}
+          </span>
+          <i class="fa-solid fa-tag pt-1" style="color: {data.tag.color}"></i>
+        {:else}
+          <span class="text-emerald-700">no tag</span>
+        {/if}
       </div>
     </span>
     <div class="basis-[70%] w-full flex flex-col justify-center items-center gap-y-2">
