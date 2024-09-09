@@ -24,29 +24,32 @@ model User {
 
 model Session {
   id        String   @id @default(cuid())
-  userId    String
   expiresAt DateTime
-  user      User     @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
 }
 
 // domain specific models
 
 model Entry {
   id          String   @id @default(cuid())
-  userId      String
-  tagId       String
   description String
   cents       BigInt
   date        DateTime
-  user        User     @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  tag         Tag      @relation(fields: [tagId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+
+  userId String
+  user   User    @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  tagId  String?
+  tag    Tag?    @relation(fields: [tagId], references: [id], onUpdate: Cascade, onDelete: Cascade)
 }
 
 model Tag {
-  id      String  @id @default(cuid())
+  id    String @id @default(cuid())
+  name  String @unique
+  color String @default("#ffffff")
+
   userId  String
-  name    String  @unique
-  color   String  @default("#ffffff")
   user    User    @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   entries Entry[]
 }
