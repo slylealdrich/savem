@@ -2,7 +2,7 @@
   import type { Tag } from "@prisma/client";
   import { superForm, type Infer, type SuperValidated } from "sveltekit-superforms";
   import type { UpdateEntrySchema } from "$lib/schemas";
-  import { type EntryWithTag } from "$lib/prisma";
+  import type { EntryWithTag } from "$lib/prisma";
 
   let {
     entry,

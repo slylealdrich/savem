@@ -1,7 +1,6 @@
 <script lang="ts">
   import type { CreateTagSchema, UpdateTagSchema } from "$lib/schemas";
   import type { Tag } from "@prisma/client";
-  import { id } from "date-fns/locale";
   import { superForm, type Infer, type SuperValidated } from "sveltekit-superforms";
 
   const {
