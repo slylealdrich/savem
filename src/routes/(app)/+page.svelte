@@ -73,17 +73,22 @@
     </span>
   </div>
   {#each filteredEntries as entry}
-    <Entry data={entry} deleteForm={data.deleteEntryForm} />
+    <Entry
+      {entry}
+      tags={data.tags}
+      updateEntryData={data.updateEntryForm}
+      deleteEntryData={data.deleteEntryForm}
+    />
   {/each}
 </div>
 
 <SlideMenu>
   <div class="p-4">
     <CreateEntryForm
+      tags={data.tags}
       createEntryData={data.createEntryForm}
       createTagData={data.createTagForm}
       updateTagData={data.updateTagForm}
-      tags={data.tags}
     />
   </div>
 </SlideMenu>

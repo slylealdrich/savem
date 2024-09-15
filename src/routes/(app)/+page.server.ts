@@ -8,6 +8,7 @@ import {
   createEntrySchema,
   createTagSchema,
   deleteEntrySchema,
+  updateEntrySchema,
   updateTagSchema,
 } from "$lib/schemas.js";
 import { lucia } from "$lib/auth.js";
@@ -22,7 +23,9 @@ export const load: PageServerLoad = async ({ locals }) => {
   };
 
   const createEntryForm = await superValidate(createEntryFormSeed, zod(createEntrySchema));
+  const updateEntryForm = await superValidate(zod(updateEntrySchema));
   const deleteEntryForm = await superValidate(zod(deleteEntrySchema));
+
   const createTagForm = await superValidate(zod(createTagSchema));
   const updateTagForm = await superValidate(zod(updateTagSchema));
 
@@ -48,12 +51,13 @@ export const load: PageServerLoad = async ({ locals }) => {
   });
 
   return {
+    entries: entries,
+    tags: tags,
     createEntryForm: createEntryForm,
+    updateEntryForm: updateEntryForm,
     deleteEntryForm: deleteEntryForm,
     createTagForm: createTagForm,
     updateTagForm: updateTagForm,
-    entries: entries,
-    tags: tags,
   };
 };
 
@@ -102,6 +106,45 @@ export const actions: Actions = {
           description: form.data.description,
           cents: form.data.dollars * 100 + form.data.cents,
           date: new Date(form.data.year, form.data.month - 1, form.data.day),
+        },
+      });
+    }
+
+    return message(form, "success");
+  },
+  updateEntry: async ({ request }) => {
+    const form = await superValidate(request, zod(updateEntrySchema));
+
+    if (!form.valid) return fail(400, { form });
+
+    if (form.data.tagId === "") {
+      await prisma.entry.update({
+        where: {
+          id: form.data.id,
+        },
+        data: {
+          description: form.data.description,
+          cents: form.data.dollars * 100 + form.data.cents,
+          date: new Date(form.data.year, form.data.month - 1, form.data.day),
+          tag: {
+            disconnect: true,
+          },
+        },
+      });
+    } else {
+      await prisma.entry.update({
+        where: {
+          id: form.data.id,
+        },
+        data: {
+          description: form.data.description,
+          cents: form.data.dollars * 100 + form.data.cents,
+          date: new Date(form.data.year, form.data.month - 1, form.data.day),
+          tag: {
+            connect: {
+              id: form.data.tagId,
+            },
+          },
         },
       });
     }

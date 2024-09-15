@@ -1,22 +1,28 @@
 <script lang="ts">
-  import type { DeleteEntrySchema } from "$lib/schemas";
-  import { type Entry } from "@prisma/client";
+  import type { DeleteEntrySchema, UpdateEntrySchema } from "$lib/schemas";
   import { format } from "date-fns";
   import { superForm, type Infer, type SuperValidated } from "sveltekit-superforms";
   import Modal from "./Modal.svelte";
   import type { EntryWithTag } from "$lib/prisma";
+  import EditEntryForm from "./EditEntryForm.svelte";
+  import type { Tag } from "@prisma/client";
 
   const {
-    data,
-    deleteForm,
+    entry,
+    tags,
+    updateEntryData,
+    deleteEntryData,
   }: {
-    data: EntryWithTag;
-    deleteForm: SuperValidated<Infer<DeleteEntrySchema>>;
+    entry: EntryWithTag;
+    tags: Tag[];
+    updateEntryData: SuperValidated<Infer<UpdateEntrySchema>>;
+    deleteEntryData: SuperValidated<Infer<DeleteEntrySchema>>;
   } = $props();
 
-  const { enhance: deleteEntryEnhance, submit: submitDeleteEntryForm } = superForm(deleteForm);
+  const { enhance: deleteEntryEnhance, submit: submitDeleteEntryForm } = superForm(deleteEntryData);
 
   let deleteConfirmationModalVisible = $state(false);
+  let editEntryFormVisible = $state(false);
 </script>
 
 <!-- Card -->
@@ -24,25 +30,25 @@
   <div class="basis-11/12 flex items-center divide-x divide-emerald-700">
     <span class="basis-[30%] w-full flex flex-col justify-center items-center">
       <span class="text-sm">
-        {format(data.date, "MM-dd-yyyy")}
+        {format(entry.date, "MM-dd-yyyy")}
       </span>
       <div class="flex justify-center items-center gap-x-2 text-sm">
-        {#if data.tag}
+        {#if entry.tag}
           <span>
-            {data.tag.name}
+            {entry.tag.name}
           </span>
-          <i class="fa-solid fa-tag pt-1" style="color: {data.tag.color}"></i>
+          <i class="fa-solid fa-tag pt-1" style="color: {entry.tag.color}"></i>
         {:else}
           <span class="text-emerald-700">no tag</span>
         {/if}
       </div>
     </span>
     <div class="basis-[70%] w-full flex flex-col justify-center items-center gap-y-2">
-      <span class="text-sm">{data.description}</span>
+      <span class="text-sm">{entry.description}</span>
       <span class="w-3/4 py-1 bg-emerald-900 text-xl rounded-md">
-        ${data.cents / 100n}.{data.cents % 100n < 10
-          ? "0" + (data.cents % 100n)
-          : data.cents % 100n}
+        ${entry.cents / 100n}.{entry.cents % 100n < 10
+          ? "0" + (entry.cents % 100n)
+          : entry.cents % 100n}
       </span>
     </div>
   </div>
@@ -56,7 +62,7 @@
         class="absolute w-32 z-20 right-0 hidden group-focus-within:grid grid-cols-1 bg-emerald-900 divide-y divide-emerald-800 rounded-md"
       >
         <!-- TODO: add editing functionality -->
-        <button class="h-12">Edit</button>
+        <button onclick={() => (editEntryFormVisible = true)} class="h-12">Edit</button>
         <button onclick={() => (deleteConfirmationModalVisible = true)} class="h-12">Delete</button>
       </div>
     </div>
@@ -69,7 +75,7 @@
     <div
       class="w-[90dvw] max-w-[400px] p-4 flex flex-col gap-y-4 bg-emerald-800 text-emerald-200 rounded-md"
     >
-      <span class="p-4 text-center text-lg">Delete entry "{data.description}"?</span>
+      <span class="p-4 text-center text-lg">Delete entry "{entry.description}"?</span>
       <div class="h-10 flex gap-x-2">
         <button
           onclick={() => (deleteConfirmationModalVisible = false)}
@@ -87,7 +93,15 @@
   </Modal>
 {/if}
 
+{#if editEntryFormVisible}
+  <Modal offClick={() => (editEntryFormVisible = false)}>
+    <div class="max-w-[90dvw] lg:max-w-[20dvw]">
+      <EditEntryForm {entry} {tags} {updateEntryData} />
+    </div>
+  </Modal>
+{/if}
+
 <!-- Delete Form -->
 <form use:deleteEntryEnhance method="post" action="?/deleteEntry" class="hidden">
-  <input name="id" type="string" value={data.id} />
+  <input name="id" type="string" value={entry.id} />
 </form>

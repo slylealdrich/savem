@@ -29,6 +29,35 @@ export const createEntrySchema = z
 
 export type CreateEntrySchema = typeof createEntrySchema;
 
+// Update Entry Schema
+
+export const updateEntrySchema = z
+  .object({
+    id: z.string(),
+    description: z.string().min(1, "Description must be included"),
+    tagId: z.string(),
+    dollars: z
+      .number()
+      .min(0, "Dollar value must be positive or 0")
+      .max(999999, "Dollar value too high"),
+    cents: z
+      .number()
+      .min(0, "Cent value must be positive or 0")
+      .max(99, "Cent value must be less than 100"),
+    month: z.number(),
+    day: z.number(),
+    year: z.number(),
+  })
+  .refine((schema) => {
+    return schema.dollars + schema.cents !== 0;
+  }, "Amount must be greater than 0")
+  .refine((schema) => {
+    const date = parse(schema.year + "-" + schema.month + "-" + schema.day, "yyyy-M-d", new Date());
+    return isValid(date);
+  }, "Invalid date");
+
+export type UpdateEntrySchema = typeof updateEntrySchema;
+
 // Delete Entry Schema
 
 export const deleteEntrySchema = z.object({
