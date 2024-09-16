@@ -53,12 +53,9 @@
       </label>
       <label class="flex flex-col">
         <span class="p-1 flex justify-center items-center bg-emerald-600 rounded-t-md">Color</span>
-        <input
-          name="color"
-          type="color"
-          bind:value={$createTagForm.color}
-          class="w-full h-10 p-1 bg-emerald-950 rounded-b-md"
-        />
+        <div class=" h-10 p-1 flex justify-center items-center bg-emerald-950 rounded-b-md">
+          <input name="color" type="color" bind:value={$createTagForm.color} />
+        </div>
       </label>
       <div class="flex gap-x-2">
         <button type="submit" class="w-full h-10 bg-emerald-600 rounded-md">
@@ -87,12 +84,9 @@
       </label>
       <label class="flex flex-col">
         <span class="p-1 flex justify-center items-center bg-emerald-600 rounded-t-md">Color</span>
-        <input
-          name="color"
-          type="color"
-          value={selectedTag.color}
-          class="w-full h-10 p-1 bg-emerald-950 rounded-b-md"
-        />
+        <div class="h-10 p-1 flex justify-center items-center bg-emerald-950 rounded-b-md">
+          <input name="color" type="color" value={selectedTag.color} />
+        </div>
       </label>
       <div class="flex gap-x-2">
         <button type="submit" class="w-full h-10 bg-emerald-600 rounded-md"> Save Edit </button>
