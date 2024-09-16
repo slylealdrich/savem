@@ -125,7 +125,7 @@ export const actions: Actions = {
         data: {
           description: form.data.description,
           cents: form.data.dollars * 100 + form.data.cents,
-          date: new Date(form.data.year, form.data.month - 1, form.data.day),
+          date: new Date(form.data.year, form.data.month, form.data.day),
           tag: {
             disconnect: true,
           },
@@ -139,7 +139,7 @@ export const actions: Actions = {
         data: {
           description: form.data.description,
           cents: form.data.dollars * 100 + form.data.cents,
-          date: new Date(form.data.year, form.data.month - 1, form.data.day),
+          date: new Date(form.data.year, form.data.month, form.data.day),
           tag: {
             connect: {
               id: form.data.tagId,
