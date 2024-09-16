@@ -19,7 +19,11 @@
     deleteEntryData: SuperValidated<Infer<DeleteEntrySchema>>;
   } = $props();
 
-  const { enhance: deleteEntryEnhance, submit: submitDeleteEntryForm } = superForm(deleteEntryData);
+  const { enhance: deleteEntryEnhance } = superForm(deleteEntryData, {
+    onSubmit: () => {
+      deleteConfirmationModalVisible = false;
+    },
+  });
 
   let deleteConfirmationModalVisible = $state(false);
   let editEntryFormVisible = $state(false);
@@ -69,30 +73,7 @@
   </div>
 </div>
 
-<!-- Delete Confirmation -->
-{#if deleteConfirmationModalVisible}
-  <Modal offClick={() => (deleteConfirmationModalVisible = false)}>
-    <div
-      class="w-[90dvw] max-w-[400px] p-4 flex flex-col gap-y-4 bg-emerald-800 text-emerald-200 rounded-md"
-    >
-      <span class="p-4 text-center text-lg">Delete entry "{entry.description}"?</span>
-      <div class="h-10 flex gap-x-2">
-        <button
-          onclick={() => (deleteConfirmationModalVisible = false)}
-          class="basis-1/2 h-full bg-emerald-900 rounded-md">No</button
-        >
-        <button
-          onclick={() => {
-            submitDeleteEntryForm();
-            deleteConfirmationModalVisible = false;
-          }}
-          class="basis-1/2 h-full bg-emerald-700 rounded-md">Yes</button
-        >
-      </div>
-    </div>
-  </Modal>
-{/if}
-
+<!-- Edit Form -->
 {#if editEntryFormVisible}
   <Modal offClick={() => (editEntryFormVisible = false)}>
     <div class="max-w-[90dvw] lg:max-w-[20dvw]">
@@ -102,6 +83,26 @@
 {/if}
 
 <!-- Delete Form -->
-<form use:deleteEntryEnhance method="post" action="?/deleteEntry" class="hidden">
-  <input name="id" type="string" value={entry.id} />
-</form>
+{#if deleteConfirmationModalVisible}
+  <Modal offClick={() => (deleteConfirmationModalVisible = false)}>
+    <form
+      use:deleteEntryEnhance
+      method="post"
+      action="?/deleteEntry"
+      class="w-[90dvw] max-w-[400px] p-4 flex flex-col gap-y-4 bg-emerald-800 text-emerald-200 rounded-md"
+    >
+      <input name="id" type="string" value={entry.id} hidden />
+      <span class="p-4 text-center text-lg">Delete entry "{entry.description}"?</span>
+      <div class="h-10 flex gap-x-2">
+        <button
+          type="button"
+          onclick={() => (deleteConfirmationModalVisible = false)}
+          class="basis-1/2 h-full bg-emerald-900 rounded-md"
+        >
+          No
+        </button>
+        <button type="submit" class="basis-1/2 h-full bg-emerald-700 rounded-md">Yes</button>
+      </div>
+    </form>
+  </Modal>
+{/if}
