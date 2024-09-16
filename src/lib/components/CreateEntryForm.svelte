@@ -6,20 +6,20 @@
   import ManageTagsForm from "./ManageTagsForm.svelte";
 
   const {
+    tags,
     createEntryData,
     createTagData,
     updateTagData,
-    tags,
   }: {
+    tags: Tag[];
     createEntryData: SuperValidated<Infer<CreateEntrySchema>>;
     createTagData: SuperValidated<Infer<CreateTagSchema>>;
     updateTagData: SuperValidated<Infer<UpdateTagSchema>>;
-    tags: Tag[];
   } = $props();
 
   const { form: createEntryForm, enhance: createEntryEnhance } = superForm(createEntryData);
 
-  let showCreateTagModal = $state(false);
+  let showManageTagsModal = $state(false);
 </script>
 
 <form
@@ -130,7 +130,7 @@
       </select>
     </label>
     <button
-      onclick={() => (showCreateTagModal = true)}
+      onclick={() => (showManageTagsModal = true)}
       class="basis-[35%] h-10 bg-emerald-700 rounded-md"
     >
       Manage Tags
@@ -144,8 +144,8 @@
   </div>
 </form>
 
-{#if showCreateTagModal}
-  <Modal offClick={() => (showCreateTagModal = false)}>
+{#if showManageTagsModal}
+  <Modal offClick={() => (showManageTagsModal = false)}>
     <ManageTagsForm {tags} {createTagData} {updateTagData} />
   </Modal>
 {/if}
