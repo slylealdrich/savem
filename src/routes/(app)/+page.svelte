@@ -4,6 +4,7 @@
   import SlideMenu from "$lib/components/SlideMenu.svelte";
   import { format, parse } from "date-fns";
   import type { PageServerData } from "./$types";
+  import { formatAmountToCurrencyString } from "$lib/utils";
 
   const { data }: { data: PageServerData } = $props();
 
@@ -47,7 +48,7 @@
     class="w-full p-2 flex justify-center items-center gap-x-2 bg-emerald-900 text-emerald-200 rounded-md"
   >
     <span class="w-full p-4 bg-emerald-950 text-center text-3xl rounded-md">
-      ${total / 100n}.{total % 100n < 10 ? "0" + (total % 100n) : total % 100n}
+      {formatAmountToCurrencyString(total)}
     </span>
   </div>
   <div

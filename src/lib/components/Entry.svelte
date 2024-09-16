@@ -6,6 +6,7 @@
   import type { EntryWithTag } from "$lib/prisma";
   import EditEntryForm from "./EditEntryForm.svelte";
   import type { Tag } from "@prisma/client";
+  import { formatAmountToCurrencyString } from "$lib/utils";
 
   const {
     entry,
@@ -50,9 +51,7 @@
     <div class="basis-[70%] w-full flex flex-col justify-center items-center gap-y-2">
       <span class="text-sm">{entry.description}</span>
       <span class="w-3/4 py-1 bg-emerald-900 text-xl rounded-md">
-        ${entry.cents / 100n}.{entry.cents % 100n < 10
-          ? "0" + (entry.cents % 100n)
-          : entry.cents % 100n}
+        {formatAmountToCurrencyString(entry.cents)}
       </span>
     </div>
   </div>
