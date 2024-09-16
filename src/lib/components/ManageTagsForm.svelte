@@ -38,6 +38,7 @@
       use:createTagEnhance
       method="post"
       action="?/createTag"
+      autocomplete="off"
       class="w-full flex flex-col gap-y-2"
     >
       <label class="flex flex-col">
@@ -70,6 +71,7 @@
       use:updateTagEnhance
       method="post"
       action="?/updateTag"
+      autocomplete="off"
       class="w-full flex flex-col gap-y-2"
     >
       <input name="id" value={selectedTag.id} class="hidden" />
