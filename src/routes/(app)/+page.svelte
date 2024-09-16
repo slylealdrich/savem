@@ -45,7 +45,7 @@
 
 <div class="p-2 pb-14 grid grid-cols-1 gap-y-2 justify-center">
   <div
-    class="w-full p-2 flex justify-center items-center gap-x-2 bg-emerald-900 text-emerald-200 rounded-md"
+    class="w-full p-2 flex justify-center items-center bg-emerald-900 text-emerald-200 rounded-md"
   >
     <span class="w-full p-4 bg-emerald-950 text-center text-3xl rounded-md">
       {formatAmountToCurrencyString(total)}
@@ -57,7 +57,7 @@
     <div class="flex flex-col md:flex-row justify-center items-center gap-2">
       <span>Total spent on</span>
 
-      <div class="flex justify-center items-center gap-x-1">
+      <div class="flex justify-center items-center gap-x-2">
         <select bind:value={selectedTagName} class="min-w-20 p-2 bg-emerald-950 rounded-md">
           <option value="" selected>everything</option>
           {#each data.tags as tag}
