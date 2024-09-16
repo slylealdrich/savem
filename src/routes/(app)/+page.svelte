@@ -2,9 +2,10 @@
   import CreateEntryForm from "$lib/components/CreateEntryForm.svelte";
   import Entry from "$lib/components/Entry.svelte";
   import SlideMenu from "$lib/components/SlideMenu.svelte";
-  import { format, parse } from "date-fns";
+  import { parse } from "date-fns";
   import type { PageServerData } from "./$types";
   import { formatAmountToCurrencyString } from "$lib/utils";
+  import { format, toZonedTime } from "date-fns-tz";
 
   const { data }: { data: PageServerData } = $props();
 
@@ -26,13 +27,19 @@
       .filter((entry) => {
         if (selectedMonth === "") return true;
         return (
-          entry.date.getMonth() === dateFilter.getMonth() &&
-          entry.date.getFullYear() === dateFilter.getFullYear()
+          entry.date.getUTCMonth() === dateFilter.getUTCMonth() &&
+          entry.date.getUTCFullYear() === dateFilter.getUTCFullYear()
         );
       })
   );
 
-  let months = $derived([...new Set(data.entries.map((entry) => format(entry.date, monthFormat)))]);
+  let months = $derived([
+    ...new Set(
+      data.entries.map((entry) =>
+        format(toZonedTime(entry.date, "UTC"), monthFormat, { timeZone: "UTC" })
+      )
+    ),
+  ]);
 
   let total = $derived(
     filteredEntries

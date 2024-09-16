@@ -77,6 +77,8 @@ export const actions: Actions = {
 
     if (!form.valid) return fail(400, { form });
 
+    const utcDate = new Date(Date.UTC(form.data.year, form.data.month - 1, form.data.day));
+
     if (form.data.tag === "") {
       await prisma.entry.create({
         data: {
@@ -87,7 +89,7 @@ export const actions: Actions = {
           },
           description: form.data.description,
           cents: form.data.dollars * 100 + form.data.cents,
-          date: new Date(form.data.year, form.data.month - 1, form.data.day),
+          date: utcDate,
         },
       });
     } else {
@@ -105,7 +107,7 @@ export const actions: Actions = {
           },
           description: form.data.description,
           cents: form.data.dollars * 100 + form.data.cents,
-          date: new Date(form.data.year, form.data.month - 1, form.data.day),
+          date: utcDate,
         },
       });
     }
@@ -117,6 +119,8 @@ export const actions: Actions = {
 
     if (!form.valid) return fail(400, { form });
 
+    const utcDate = new Date(Date.UTC(form.data.year, form.data.month - 1, form.data.day));
+
     if (form.data.tagId === "") {
       await prisma.entry.update({
         where: {
@@ -125,7 +129,7 @@ export const actions: Actions = {
         data: {
           description: form.data.description,
           cents: form.data.dollars * 100 + form.data.cents,
-          date: new Date(form.data.year, form.data.month, form.data.day),
+          date: utcDate,
           tag: {
             disconnect: true,
           },
@@ -139,7 +143,7 @@ export const actions: Actions = {
         data: {
           description: form.data.description,
           cents: form.data.dollars * 100 + form.data.cents,
-          date: new Date(form.data.year, form.data.month, form.data.day),
+          date: utcDate,
           tag: {
             connect: {
               id: form.data.tagId,

@@ -3,6 +3,6 @@ export function formatAmountToCurrencyString(amount: bigint): string {
     style: "currency",
     currency: "USD",
   });
-  const tset = Number(amount) / 100;
-  return usd.format(tset);
+  const convertedAmount = Number(amount) / 100;
+  return usd.format(convertedAmount);
 }

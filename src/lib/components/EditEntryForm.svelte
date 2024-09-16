@@ -73,7 +73,7 @@
       <input
         name="month"
         placeholder="month"
-        value={entry.date.getMonth() + 1}
+        value={entry.date.getUTCMonth() + 1}
         class="w-full p-1 bg-emerald-950 text-center placeholder-emerald-900 rounded-t-md"
       />
       <span
@@ -86,7 +86,7 @@
       <input
         name="day"
         placeholder="day"
-        value={entry.date.getDate()}
+        value={entry.date.getUTCDate()}
         class="w-full p-1 bg-emerald-950 text-center placeholder-emerald-900 rounded-t-md"
       />
       <span
@@ -99,7 +99,7 @@
       <input
         name="year"
         placeholder="year"
-        value={entry.date.getFullYear()}
+        value={entry.date.getUTCFullYear()}
         class="w-full p-1 bg-emerald-950 text-center placeholder-emerald-900 rounded-t-md"
       />
       <span
