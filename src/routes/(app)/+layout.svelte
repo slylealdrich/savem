@@ -10,7 +10,7 @@
         method="post"
         use:enhance
         action="?/signOut"
-        class="w-20 h-8 flex justify-center items-center bg-emerald-950 text-emerald-200 rounded-md"
+        class="w-20 h-8 flex justify-center items-center bg-emerald-800 text-emerald-200 rounded-md"
       >
         <button type="submit">Sign Out</button>
       </form>
