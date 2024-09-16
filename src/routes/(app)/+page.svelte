@@ -46,10 +46,17 @@
   <div
     class="w-full p-2 flex justify-center items-center gap-x-2 bg-emerald-900 text-emerald-200 rounded-md"
   >
+    <span class="w-full p-4 bg-emerald-950 text-center text-3xl rounded-md">
+      ${total / 100n}.{total % 100n < 10 ? "0" + (total % 100n) : total % 100n}
+    </span>
+  </div>
+  <div
+    class="w-full p-2 flex justify-center items-center bg-emerald-900 text-emerald-200 rounded-md"
+  >
     <div class="flex flex-col md:flex-row justify-center items-center gap-2">
-      <span class="text-lg">Total spent on</span>
+      <span>Total spent on</span>
 
-      <div class="flex justify-center items-center gap-x-2">
+      <div class="flex justify-center items-center gap-x-1">
         <select bind:value={selectedTagName} class="min-w-20 p-2 bg-emerald-950 rounded-md">
           <option value="" selected>everything</option>
           {#each data.tags as tag}
@@ -67,10 +74,6 @@
         </select>
       </div>
     </div>
-
-    <span class="p-2 bg-emerald-950 text-xl rounded-md">
-      ${total / 100n}.{total % 100n < 10 ? "0" + (total % 100n) : total % 100n}
-    </span>
   </div>
   {#each filteredEntries as entry}
     <Entry
