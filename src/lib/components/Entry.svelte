@@ -6,8 +6,8 @@
   import EditEntryForm from "./EditEntryForm.svelte";
   import type { Tag } from "@prisma/client";
   import { formatAmountToCurrencyString } from "$lib/utils";
-  import { format } from "date-fns-tz";
-  import { toZonedTime } from "date-fns-tz/toZonedTime";
+  import { format } from "date-fns";
+  import { utc } from "@date-fns/utc";
 
   const {
     entry,
@@ -36,7 +36,7 @@
   <div class="basis-11/12 flex items-center divide-x divide-emerald-700">
     <span class="basis-[30%] w-full flex flex-col justify-center items-center">
       <span class="text-sm">
-        {format(toZonedTime(entry.date, "UTC"), "MM-dd-yyyy", { timeZone: "UTC" })}
+        {format(entry.date, "MM-dd-yyyy", { in: utc })}
       </span>
       <div class="flex justify-center items-center gap-x-2 text-sm">
         {#if entry.tag}

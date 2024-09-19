@@ -5,7 +5,8 @@
   import { parse } from "date-fns";
   import type { PageServerData } from "./$types";
   import { formatAmountToCurrencyString } from "$lib/utils";
-  import { format, toZonedTime } from "date-fns-tz";
+  import { format } from "date-fns";
+  import { utc } from "@date-fns/utc";
 
   const { data }: { data: PageServerData } = $props();
 
@@ -34,11 +35,7 @@
   );
 
   let months = $derived([
-    ...new Set(
-      data.entries.map((entry) =>
-        format(toZonedTime(entry.date, "UTC"), monthFormat, { timeZone: "UTC" })
-      )
-    ),
+    ...new Set(data.entries.map((entry) => format(entry.date, monthFormat, { in: utc }))),
   ]);
 
   let total = $derived(
