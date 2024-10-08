@@ -80,7 +80,10 @@
       </div>
     </div>
   </div>
-  {#each filteredEntries as entry}
+  {#each filteredEntries as entry, i}
+    {#if i === 0 || filteredEntries[i].date.getUTCMonth() !== filteredEntries[i - 1].date.getUTCMonth()}
+      <span class="w-full text-center text-emerald-200">{format(entry.date, monthFormat)}</span>
+    {/if}
     <Entry
       {entry}
       tags={data.tags}
