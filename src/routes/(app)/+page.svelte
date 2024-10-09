@@ -82,7 +82,9 @@
   </div>
   {#each filteredEntries as entry, i}
     {#if i === 0 || filteredEntries[i].date.getUTCMonth() !== filteredEntries[i - 1].date.getUTCMonth()}
-      <span class="w-full text-center text-emerald-200">{format(entry.date, monthFormat)}</span>
+      <hr class=" border-emerald-900" />
+      <span class="flex justify-center items-center text-emerald-800">{format(entry.date, monthFormat)}</span>
+      <hr class="border-emerald-900" />
     {/if}
     <Entry
       {entry}

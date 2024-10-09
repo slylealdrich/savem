@@ -130,6 +130,7 @@
       </select>
     </label>
     <button
+      type="button"
       onclick={() => (showManageTagsModal = true)}
       class="basis-[35%] h-10 bg-emerald-700 rounded-md"
     >
