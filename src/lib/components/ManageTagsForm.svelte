@@ -39,7 +39,7 @@
   <h1 class="text-xl font-bold">Manage Tags</h1>
 
   <select bind:value={selectedTagId} class="w-5/6 p-2 bg-emerald-950 rounded-md">
-    <option value="" selected>create new tag</option>
+    <option value="" selected>• create new tag •</option>
     {#each tags as tag}
       <option value={tag.id}>{tag.name}</option>
     {/each}
