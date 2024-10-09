@@ -1,5 +1,10 @@
 <script lang="ts">
-  import type { CreateEntrySchema, CreateTagSchema, UpdateTagSchema } from "$lib/schemas";
+  import type {
+    CreateEntrySchema,
+    CreateTagSchema,
+    DeleteTagSchema,
+    UpdateTagSchema,
+  } from "$lib/schemas";
   import Modal from "$lib/components/Modal.svelte";
   import { superForm, type Infer, type SuperValidated } from "sveltekit-superforms";
   import type { Tag } from "@prisma/client";
@@ -10,11 +15,13 @@
     createEntryData,
     createTagData,
     updateTagData,
+    deleteTagData,
   }: {
     tags: Tag[];
     createEntryData: SuperValidated<Infer<CreateEntrySchema>>;
     createTagData: SuperValidated<Infer<CreateTagSchema>>;
     updateTagData: SuperValidated<Infer<UpdateTagSchema>>;
+    deleteTagData: SuperValidated<Infer<DeleteTagSchema>>;
   } = $props();
 
   const { form: createEntryForm, enhance: createEntryEnhance } = superForm(createEntryData);
@@ -147,6 +154,6 @@
 
 {#if showManageTagsModal}
   <Modal offClick={() => (showManageTagsModal = false)}>
-    <ManageTagsForm {tags} {createTagData} {updateTagData} />
+    <ManageTagsForm {tags} {createTagData} {updateTagData} {deleteTagData} />
   </Modal>
 {/if}

@@ -85,6 +85,14 @@ export const updateTagSchema = z.object({
 
 export type UpdateTagSchema = typeof updateTagSchema;
 
+// Delete Tag Schema
+
+export const deleteTagSchema = z.object({
+  id: z.string(),
+});
+
+export type DeleteTagSchema = typeof deleteTagSchema;
+
 // Sign Up Schema
 
 export const signUpSchema = z.object({

@@ -8,6 +8,7 @@ import {
   createEntrySchema,
   createTagSchema,
   deleteEntrySchema,
+  deleteTagSchema,
   updateEntrySchema,
   updateTagSchema,
 } from "$lib/schemas.js";
@@ -28,6 +29,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 
   const createTagForm = await superValidate(zod(createTagSchema));
   const updateTagForm = await superValidate(zod(updateTagSchema));
+  const deleteTagForm = await superValidate(zod(deleteTagSchema));
 
   const entries: EntryWithTag[] = await prisma.entry.findMany({
     where: {
@@ -51,13 +53,14 @@ export const load: PageServerLoad = async ({ locals }) => {
   });
 
   return {
-    entries: entries,
-    tags: tags,
-    createEntryForm: createEntryForm,
-    updateEntryForm: updateEntryForm,
-    deleteEntryForm: deleteEntryForm,
-    createTagForm: createTagForm,
-    updateTagForm: updateTagForm,
+    entries,
+    tags,
+    createEntryForm,
+    updateEntryForm,
+    deleteEntryForm,
+    createTagForm,
+    updateTagForm,
+    deleteTagForm,
   };
 };
 
@@ -200,5 +203,20 @@ export const actions: Actions = {
         color: form.data.color,
       },
     });
+
+    return message(form, "success");
+  },
+  deleteTag: async ({ request }) => {
+    const form = await superValidate(request, zod(deleteTagSchema));
+
+    if (!form.valid) return fail(400, { form });
+
+    await prisma.tag.delete({
+      where: {
+        id: form.data.id,
+      },
+    });
+
+    return message(form, "success");
   },
 };

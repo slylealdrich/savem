@@ -83,7 +83,9 @@
   {#each filteredEntries as entry, i}
     {#if i === 0 || filteredEntries[i].date.getUTCMonth() !== filteredEntries[i - 1].date.getUTCMonth()}
       <hr class=" border-emerald-900" />
-      <span class="flex justify-center items-center text-sm text-emerald-200">{format(entry.date, monthFormat)}</span>
+      <span class="flex justify-center items-center text-sm text-emerald-200">
+        {format(entry.date, monthFormat)}
+      </span>
       <hr class="border-emerald-900" />
     {/if}
     <Entry
@@ -102,6 +104,7 @@
       createEntryData={data.createEntryForm}
       createTagData={data.createTagForm}
       updateTagData={data.updateTagForm}
+      deleteTagData={data.deleteTagForm}
     />
   </div>
 </SlideMenu>

@@ -22,7 +22,7 @@
   } = $props();
 
   const { enhance: deleteEntryEnhance } = superForm(deleteEntryData, {
-    onSubmit: () => {
+    onResult: () => {
       deleteConfirmationModalVisible = false;
     },
   });
