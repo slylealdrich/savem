@@ -15,7 +15,7 @@ import {
 import { auth } from "$lib/auth.js";
 
 export const load: PageServerLoad = async ({ locals }) => {
-  if (locals.user === null) {
+  if (!locals.user) {
     throw redirect(307, "/sign-in");
   }
 
@@ -37,7 +37,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 
   const entries: EntryWithTag[] = await prisma.entry.findMany({
     where: {
-      userId: locals.user?.id,
+      userId: locals.user.id,
     },
     orderBy: {
       date: "desc",
@@ -49,7 +49,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 
   const tags: Tag[] = await prisma.tag.findMany({
     where: {
-      userId: locals.user?.id,
+      userId: locals.user.id,
     },
     orderBy: {
       name: "asc",
@@ -76,6 +76,8 @@ export const actions: Actions = {
     auth.deleteSessionTokenCookie(cookies);
   },
   createEntry: async ({ request, locals }) => {
+    if (!locals.user) throw redirect(307, "/sign-in");
+
     const form = await superValidate(request, zod(createEntrySchema));
 
     if (!form.valid) return fail(400, { form });
@@ -87,7 +89,7 @@ export const actions: Actions = {
         data: {
           user: {
             connect: {
-              id: locals.user?.id,
+              id: locals.user.id,
             },
           },
           description: form.data.description,
@@ -100,7 +102,7 @@ export const actions: Actions = {
         data: {
           user: {
             connect: {
-              id: locals.user?.id,
+              id: locals.user.id,
             },
           },
           tag: {
@@ -117,7 +119,9 @@ export const actions: Actions = {
 
     return message(form, "success");
   },
-  updateEntry: async ({ request }) => {
+  updateEntry: async ({ request, locals }) => {
+    if (!locals.user) throw redirect(307, "/sign-in");
+
     const form = await superValidate(request, zod(updateEntrySchema));
 
     if (!form.valid) return fail(400, { form });
@@ -128,6 +132,7 @@ export const actions: Actions = {
       await prisma.entry.update({
         where: {
           id: form.data.id,
+          userId: locals.user.id,
         },
         data: {
           description: form.data.description,
@@ -142,6 +147,7 @@ export const actions: Actions = {
       await prisma.entry.update({
         where: {
           id: form.data.id,
+          userId: locals.user.id,
         },
         data: {
           description: form.data.description,
@@ -158,7 +164,9 @@ export const actions: Actions = {
 
     return message(form, "success");
   },
-  deleteEntry: async ({ request }) => {
+  deleteEntry: async ({ request, locals }) => {
+    if (!locals.user) throw redirect(307, "/sign-in");
+
     const form = await superValidate(request, zod(deleteEntrySchema));
 
     if (!form.valid) return fail(400, { form });
@@ -166,12 +174,15 @@ export const actions: Actions = {
     await prisma.entry.delete({
       where: {
         id: form.data.id,
+        userId: locals.user.id,
       },
     });
 
     return message(form, "success");
   },
   createTag: async ({ request, locals }) => {
+    if (!locals.user) throw redirect(307, "/sign-in");
+
     const form = await superValidate(request, zod(createTagSchema));
 
     if (!form.valid) return fail(400, { form });
@@ -180,7 +191,7 @@ export const actions: Actions = {
       data: {
         user: {
           connect: {
-            id: locals.user?.id,
+            id: locals.user.id,
           },
         },
         name: form.data.name,
@@ -189,7 +200,9 @@ export const actions: Actions = {
     });
     return message(form, "success");
   },
-  updateTag: async ({ request }) => {
+  updateTag: async ({ request, locals }) => {
+    if (!locals.user) throw redirect(307, "/sign-in");
+
     const form = await superValidate(request, zod(updateTagSchema));
 
     if (!form.valid) return fail(400, { form });
@@ -197,6 +210,7 @@ export const actions: Actions = {
     await prisma.tag.update({
       where: {
         id: form.data.id,
+        userId: locals.user.id,
       },
       data: {
         name: form.data.name,
@@ -206,7 +220,9 @@ export const actions: Actions = {
 
     return message(form, "success");
   },
-  deleteTag: async ({ request }) => {
+  deleteTag: async ({ request, locals }) => {
+    if (!locals.user) throw redirect(307, "/sign-in");
+
     const form = await superValidate(request, zod(deleteTagSchema));
 
     if (!form.valid) return fail(400, { form });
@@ -214,6 +230,7 @@ export const actions: Actions = {
     await prisma.tag.delete({
       where: {
         id: form.data.id,
+        userId: locals.user.id,
       },
     });
 
