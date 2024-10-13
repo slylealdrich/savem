@@ -5,7 +5,7 @@ import { signInSchema } from "$lib/schemas";
 import { redirect, type Actions } from "@sveltejs/kit";
 import { Argon2id } from "oslo/password";
 import prisma from "$lib/prisma";
-import { lucia } from "$lib/auth";
+import { auth } from "$lib/auth";
 
 export const load: PageServerLoad = async () => {
   const signInForm = await superValidate(zod(signInSchema));
@@ -33,12 +33,9 @@ export const actions: Actions = {
     const validPassword = await argon2id.verify(user.hashedPassword, password);
     if (!validPassword) return setError(form, "username", "Incorrect username or password");
 
-    const session = await lucia.createSession(user.id, {});
-    const sessionCookie = lucia.createSessionCookie(session.id);
-    cookies.set(sessionCookie.name, sessionCookie.value, {
-      path: ".",
-      ...sessionCookie.attributes,
-    });
+    const token = auth.generateSessionToken();
+    const session = await auth.createSession(token, user.id);
+    auth.setSessionTokenCookie(cookies, token, session.expiresAt);
 
     redirect(307, "/");
   },

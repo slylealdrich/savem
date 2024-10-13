@@ -1,6 +1,6 @@
 import prisma, { type EntryWithTag } from "$lib/prisma.js";
 import type { Tag } from "@prisma/client";
-import { fail, type Actions } from "@sveltejs/kit";
+import { fail, redirect, type Actions } from "@sveltejs/kit";
 import { message, superValidate } from "sveltekit-superforms";
 import { zod } from "sveltekit-superforms/adapters";
 import type { PageServerLoad } from "./$types.js";
@@ -12,9 +12,13 @@ import {
   updateEntrySchema,
   updateTagSchema,
 } from "$lib/schemas.js";
-import { lucia } from "$lib/auth.js";
+import { auth } from "$lib/auth.js";
 
 export const load: PageServerLoad = async ({ locals }) => {
+  if (locals.user === null) {
+    throw redirect(307, "/sign-in");
+  }
+
   const today = new Date();
   const createEntryFormSeed = {
     description: "",
@@ -68,12 +72,8 @@ export const actions: Actions = {
   signOut: async ({ locals, cookies }) => {
     if (!locals.session) return fail(401);
 
-    await lucia.invalidateSession(locals.session.id);
-    const sessionCookie = lucia.createBlankSessionCookie();
-    cookies.set(sessionCookie.name, sessionCookie.value, {
-      path: ".",
-      ...sessionCookie.attributes,
-    });
+    await auth.invalidateSession(locals.session.id);
+    auth.deleteSessionTokenCookie(cookies);
   },
   createEntry: async ({ request, locals }) => {
     const form = await superValidate(request, zod(createEntrySchema));

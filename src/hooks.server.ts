@@ -1,6 +1,6 @@
 import type { Handle } from "@sveltejs/kit";
 import { redirect } from "@sveltejs/kit";
-import { lucia } from "$lib/auth";
+import { auth } from "$lib/auth";
 
 export const handle: Handle = async ({ event, resolve }) => {
   // skip authentication for these routes
@@ -8,36 +8,27 @@ export const handle: Handle = async ({ event, resolve }) => {
     event.url.pathname.startsWith("/sign-in") || event.url.pathname.startsWith("/sign-up");
 
   // check to see if there is a session cookie
-  const sessionId = event.cookies.get(lucia.sessionCookieName);
-  if (!sessionId) {
+  const token = event.cookies.get("session") ?? null;
+  if (token === null) {
     event.locals.user = null;
     event.locals.session = null;
     if (inAuth) return resolve(event);
     else throw redirect(307, "/sign-in");
   }
 
-  const { user, session } = await lucia.validateSession(sessionId);
+  const { session, user } = await auth.validateSessionToken(token);
 
-  // remake the session
-  if (session && session.fresh) {
-    const sessionCookie = lucia.createSessionCookie(session.id);
-    event.cookies.set(sessionCookie.name, sessionCookie.value, {
-      path: ".",
-      ...sessionCookie.attributes,
-    });
-  }
-
-  // create a new session cookie
-  if (!session) {
-    const sessionCookie = lucia.createBlankSessionCookie();
-    event.cookies.set(sessionCookie.name, sessionCookie.value, {
-      path: ".",
-      ...sessionCookie.attributes,
-    });
+  if (session === null) {
+    // remove the session cookie if invalid
+    auth.deleteSessionTokenCookie(event.cookies);
+  } else {
+    // reset the session cookie if valid
+    auth.setSessionTokenCookie(event.cookies, token, session.expiresAt);
   }
 
   event.locals.user = user;
   event.locals.session = session;
+
 
   return resolve(event);
 };

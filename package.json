@@ -43,10 +43,10 @@
   "dependencies": {
     "@date-fns/utc": "^2.1.0",
     "@fortawesome/fontawesome-free": "^6.6.0",
-    "@lucia-auth/adapter-prisma": "^4.0.1",
+    "@oslojs/crypto": "^1.0.1",
+    "@oslojs/encoding": "^1.1.0",
     "@prisma/client": "5.19.1",
     "date-fns": "^4.1.0",
-    "lucia": "^3.2.0",
     "oslo": "^1.2.1"
   }
 }
